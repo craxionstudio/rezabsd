@@ -19,7 +19,6 @@ class AboutController extends Controller
         ]));
 
         return Inertia::render('About', [
-            'settings' => $settings,
             'seo' => [
                 'title' => 'About Us',
                 'description' => "Kenali {$settings->nama_sales}, {$settings->jabatan} dari {$settings->nama_agensi}.",

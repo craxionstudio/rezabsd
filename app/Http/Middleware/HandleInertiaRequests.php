@@ -50,7 +50,9 @@ class HandleInertiaRequests extends Middleware
                 'instagram' => $settings->instagram,
                 'facebook' => $settings->facebook,
                 'tiktok' => $settings->tiktok,
+                'bio' => $settings->bio,
                 'disclaimer' => $settings->disclaimer,
+                'foto_profil' => $settings->fotoProfilUrl(),
             ],
         ];
     }

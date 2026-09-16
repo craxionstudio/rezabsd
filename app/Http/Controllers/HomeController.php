@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Artikel;
 use App\Models\Produk;
 use App\Models\Setting;
 use Inertia\Inertia;
@@ -25,13 +26,27 @@ class HomeController extends Controller
                 'status' => $produk->status,
                 'harga' => $produk->harga,
                 'lokasi' => $produk->lokasi,
+                'luas_tanah' => $produk->luas_tanah,
                 'kamar_tidur' => $produk->kamar_tidur,
                 'kamar_mandi' => $produk->kamar_mandi,
                 'cover' => $produk->coverImageUrl(),
             ]);
 
+        $artikelHighlights = Artikel::query()
+            ->published()
+            ->latest('tanggal_publish')
+            ->take(3)
+            ->get()
+            ->map(fn (Artikel $artikel) => [
+                'judul' => $artikel->judul,
+                'slug' => $artikel->slug,
+                'excerpt' => str($artikel->konten)->stripTags()->limit(110)->toString(),
+                'featured_image' => $artikel->featuredImageUrl(),
+            ]);
+
         return Inertia::render('Home', [
             'highlights' => $highlights,
+            'artikelHighlights' => $artikelHighlights,
             'seo' => [
                 'title' => 'Home',
                 'description' => "Cari rumah, ruko, dan kavling bersama {$settings->nama_sales}, {$settings->jabatan} dari {$settings->nama_agensi}.",

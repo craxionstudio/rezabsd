@@ -1,57 +1,78 @@
 import { Link, usePage } from '@inertiajs/react';
+import { waLink, displayPhone } from '../lib/format';
 
-const nav = [
-    { href: '/', label: 'Home' },
+const navItems = [
+    { href: '/', label: 'Beranda' },
+    { href: '/about-us', label: 'Tentang' },
     { href: '/produk', label: 'Produk' },
     { href: '/artikel', label: 'Artikel' },
-    { href: '/about-us', label: 'About Us' },
 ];
 
 export default function SiteLayout({ children }) {
-    const { settings } = usePage().props;
-    const waLink = settings?.whatsapp
-        ? `https://wa.me/${settings.whatsapp}?text=${encodeURIComponent('Halo, saya tertarik dengan info properti.')}`
-        : null;
+    const { props, url: currentUrl } = usePage();
+    const { settings } = props;
 
     return (
-        <div className="flex min-h-screen flex-col bg-white text-slate-900">
-            <header className="border-b border-slate-200">
-                <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
-                    <Link href="/" className="flex flex-col leading-tight">
-                        <span className="text-lg font-semibold">{settings?.nama_sales}</span>
-                        <span className="text-xs text-slate-500">Sales dari {settings?.nama_agensi}</span>
-                    </Link>
-                    <nav className="flex items-center gap-6 text-sm font-medium">
-                        {nav.map((item) => (
-                            <Link key={item.href} href={item.href} className="text-slate-700 hover:text-slate-950">
-                                {item.label}
-                            </Link>
-                        ))}
-                        {waLink && (
-                            <a
-                                href={waLink}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="rounded-full bg-emerald-600 px-4 py-2 text-white hover:bg-emerald-700"
-                            >
-                                WhatsApp
-                            </a>
-                        )}
-                    </nav>
+        <div className="antialiased">
+            <nav className="max-w-6xl mx-auto flex items-center justify-between px-6 py-6">
+                <Link href="/" className="font-display text-lg">
+                    {settings.nama_sales}
+                </Link>
+                <div className="hidden md:flex items-center gap-8 text-sm text-[#6B6459]">
+                    {navItems.map((item) => (
+                        <Link
+                            key={item.href}
+                            href={item.href}
+                            className={
+                                currentUrl === item.href || (item.href !== '/' && currentUrl.startsWith(item.href))
+                                    ? 'text-[#1E1C18]'
+                                    : 'hover:text-[#1E1C18] transition-colors'
+                            }
+                        >
+                            {item.label}
+                        </Link>
+                    ))}
                 </div>
-            </header>
+                <a
+                    href={waLink(settings.whatsapp)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-[#1E1C18] text-[#F4F1E9] text-sm px-5 py-2.5 rounded-full hover:bg-[#332F28] transition-colors whitespace-nowrap"
+                >
+                    Hubungi via WhatsApp
+                </a>
+            </nav>
 
-            <main className="flex-1">{children}</main>
+            {children}
 
-            <footer className="border-t border-slate-200 bg-slate-50">
-                <div className="mx-auto max-w-6xl px-4 py-8 text-sm text-slate-600">
-                    <p className="font-medium text-slate-800">
-                        {settings?.nama_sales} — {settings?.jabatan} di {settings?.nama_agensi}
-                    </p>
-                    <p className="mt-2 max-w-3xl">{settings?.disclaimer}</p>
-                    <p className="mt-4 text-xs text-slate-400">
-                        &copy; {new Date().getFullYear()} {settings?.nama_sales}. Bukan situs resmi developer/kawasan.
-                    </p>
+            <footer className="bg-[#EAE5D8] border-t border-[#DAD4C5]">
+                <div className="max-w-6xl mx-auto px-6 py-14 grid md:grid-cols-3 gap-10">
+                    <div>
+                        <p className="font-display text-lg mb-2">{settings.nama_sales}</p>
+                        <p className="text-sm text-[#6B6459] leading-relaxed">
+                            Sales properti {settings.nama_agensi} untuk kawasan ini. Bantu cari unit primary dan
+                            secondary sesuai kebutuhan.
+                        </p>
+                    </div>
+                    <div>
+                        <p className="text-sm text-[#6B6459] mb-3">Halaman</p>
+                        <div className="flex flex-col gap-2 text-sm">
+                            {navItems.map((item) => (
+                                <Link key={item.href} href={item.href} className="hover:text-[#1E1C18] transition-colors">
+                                    {item.label}
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+                    <div>
+                        <p className="text-sm text-[#6B6459] mb-3">Kontak</p>
+                        {settings.whatsapp && <p className="text-sm mb-1">{displayPhone(settings.whatsapp)}</p>}
+                        {settings.email && <p className="text-sm">{settings.email}</p>}
+                    </div>
+                </div>
+                <div className="max-w-6xl mx-auto px-6 pb-8 text-xs text-[#8A8471] border-t border-[#DAD4C5] pt-6">
+                    Website independen milik {settings.nama_sales}, sales dari {settings.nama_agensi}. Bukan situs
+                    resmi developer/kawasan. &copy; {new Date().getFullYear()} {settings.nama_sales}.
                 </div>
             </footer>
         </div>

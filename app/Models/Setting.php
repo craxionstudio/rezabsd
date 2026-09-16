@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Setting extends Model
 {
@@ -16,6 +17,7 @@ class Setting extends Model
         'instagram',
         'facebook',
         'tiktok',
+        'foto_profil',
         'bio',
         'disclaimer',
     ];
@@ -23,5 +25,10 @@ class Setting extends Model
     public static function current(): self
     {
         return static::query()->firstOrCreate([]);
+    }
+
+    public function fotoProfilUrl(): ?string
+    {
+        return $this->foto_profil ? Storage::disk('public')->url($this->foto_profil) : null;
     }
 }

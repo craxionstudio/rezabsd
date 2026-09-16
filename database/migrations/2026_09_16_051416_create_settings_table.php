@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('instagram')->nullable();
             $table->string('facebook')->nullable();
             $table->string('tiktok')->nullable();
+            $table->string('foto_profil')->nullable();
             $table->text('bio')->nullable();
             $table->text('disclaimer')->default(
                 'Website ini adalah kanal pemasaran independen milik Reza Alhadithia, sales dari Linktown, dan bukan situs resmi dari developer/kawasan yang produknya dipasarkan di sini.'

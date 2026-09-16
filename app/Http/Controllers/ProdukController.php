@@ -68,6 +68,8 @@ class ProdukController extends Controller
             ->map(fn (Produk $item) => [
                 'nama' => $item->nama,
                 'slug' => $item->slug,
+                'tipe' => $item->tipe,
+                'status' => $item->status,
                 'harga' => $item->harga,
                 'lokasi' => $item->lokasi,
                 'cover' => $item->coverImageUrl(),
