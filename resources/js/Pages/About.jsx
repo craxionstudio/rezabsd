@@ -2,11 +2,11 @@ import { usePage } from '@inertiajs/react';
 import SiteLayout from '../Layouts/SiteLayout';
 import Seo from '../Components/Seo';
 import { PortraitArt } from '../Components/PlaceholderArt';
-import { displayPhone, waLink } from '../lib/format';
+import { renderWithEmphasis } from '../lib/text';
+import { waLink } from '../lib/format';
 
-export default function About({ seo, jsonLd }) {
+export default function About({ content, seo, jsonLd }) {
     const { settings } = usePage().props;
-    const bioParagraphs = (settings.bio ?? '').split(/\n{2,}/).filter(Boolean);
 
     return (
         <SiteLayout>
@@ -30,13 +30,9 @@ export default function About({ seo, jsonLd }) {
                 <div>
                     <p className="text-sm text-[#6E7C58] mb-4">Sales properti {settings.nama_agensi}</p>
                     <h1 className="font-display text-4xl md:text-5xl leading-[1.1] mb-6">
-                        Halo, saya {settings.nama_sales.split(' ')[0]} — bantu Anda cari unit yang{' '}
-                        <em className="italic">pas</em>
+                        {renderWithEmphasis(content.hero_headline)}
                     </h1>
-                    <p className="text-[#6B6459] text-lg max-w-lg leading-relaxed mb-6">
-                        Lima tahun fokus di kawasan ini, dari unit primary langsung dari pengembang sampai secondary
-                        dari pemilik lama. Saya pegang sendiri tiap konsultasi, bukan dilempar ke tim lain.
-                    </p>
+                    <p className="text-[#6B6459] text-lg max-w-lg leading-relaxed mb-6">{content.hero_subtext}</p>
                     <a
                         href={waLink(settings.whatsapp)}
                         target="_blank"
@@ -50,18 +46,8 @@ export default function About({ seo, jsonLd }) {
 
             <section className="max-w-3xl mx-auto px-6 py-16 border-t border-[#DAD4C5]">
                 <h2 className="font-display text-2xl mb-6">Latar belakang</h2>
-                {bioParagraphs.length > 0 ? (
-                    bioParagraphs.map((paragraph, index) => (
-                        <p
-                            key={index}
-                            className={`text-[#6B6459] leading-relaxed ${index < bioParagraphs.length - 1 ? 'mb-4' : ''}`}
-                        >
-                            {paragraph}
-                        </p>
-                    ))
-                ) : (
-                    <p className="text-[#6B6459] leading-relaxed">Belum ada bio yang ditambahkan.</p>
-                )}
+                <p className="text-[#6B6459] leading-relaxed mb-4">{content.bio_paragraph_1}</p>
+                <p className="text-[#6B6459] leading-relaxed">{content.bio_paragraph_2}</p>
             </section>
 
             <section className="border-t border-[#DAD4C5]">
@@ -70,33 +56,27 @@ export default function About({ seo, jsonLd }) {
                     <div className="divide-y divide-[#DAD4C5] text-sm">
                         <div className="flex justify-between py-4">
                             <span className="text-[#6B6459]">Afiliasi</span>
-                            <span>{settings.nama_agensi} — agen properti</span>
+                            <span>{content.credential_afiliasi}</span>
                         </div>
                         <div className="flex justify-between py-4">
                             <span className="text-[#6B6459]">Area operasi</span>
-                            <span>Kawasan ini saja</span>
+                            <span>{content.credential_area}</span>
                         </div>
                         <div className="flex justify-between py-4">
                             <span className="text-[#6B6459]">Pengalaman</span>
-                            <span>5 tahun, 50+ unit terjual</span>
+                            <span>{content.credential_pengalaman}</span>
                         </div>
-                        {settings.whatsapp && (
-                            <div className="flex justify-between py-4">
-                                <span className="text-[#6B6459]">Kontak</span>
-                                <span>{displayPhone(settings.whatsapp)}</span>
-                            </div>
-                        )}
+                        <div className="flex justify-between py-4">
+                            <span className="text-[#6B6459]">Kontak</span>
+                            <span>{content.credential_kontak}</span>
+                        </div>
                     </div>
                 </div>
             </section>
 
             <section className="max-w-3xl mx-auto px-6 py-16 border-t border-[#DAD4C5]">
                 <h2 className="font-display text-2xl mb-6">Tentang {settings.nama_agensi}</h2>
-                <p className="text-[#6B6459] leading-relaxed mb-8">
-                    {settings.nama_agensi} adalah agen properti tempat saya bernaung. Bukan pengembang, bukan
-                    pengelola kawasan — perannya menghubungkan pembeli dengan unit primary dari pengembang maupun
-                    secondary dari pemilik lama, lewat sales seperti saya yang pegang area tertentu.
-                </p>
+                <p className="text-[#6B6459] leading-relaxed mb-8">{content.linktown_description}</p>
                 <div className="border-l-2 border-[#4C5740] pl-6 py-1">
                     <p className="text-sm text-[#6B6459] leading-relaxed">{settings.disclaimer}</p>
                 </div>

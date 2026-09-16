@@ -18,7 +18,6 @@ class Setting extends Model
         'facebook',
         'tiktok',
         'foto_profil',
-        'bio',
         'disclaimer',
     ];
 

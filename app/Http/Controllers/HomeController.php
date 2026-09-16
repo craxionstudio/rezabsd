@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Artikel;
+use App\Models\HomeContent;
 use App\Models\Produk;
 use App\Models\Setting;
 use Inertia\Inertia;
@@ -45,6 +46,7 @@ class HomeController extends Controller
             ]);
 
         return Inertia::render('Home', [
+            'content' => HomeContent::current(),
             'highlights' => $highlights,
             'artikelHighlights' => $artikelHighlights,
             'seo' => [

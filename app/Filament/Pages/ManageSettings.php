@@ -64,11 +64,8 @@ class ManageSettings extends Page implements HasForms
                         TextInput::make('facebook'),
                         TextInput::make('tiktok'),
                     ]),
-                Section::make('Bio & Disclaimer')
+                Section::make('Disclaimer')
                     ->schema([
-                        Textarea::make('bio')
-                            ->rows(4)
-                            ->columnSpanFull(),
                         Textarea::make('disclaimer')
                             ->required()
                             ->rows(3)

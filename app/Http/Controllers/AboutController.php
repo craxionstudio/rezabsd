@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AboutContent;
 use App\Models\Setting;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -19,6 +20,7 @@ class AboutController extends Controller
         ]));
 
         return Inertia::render('About', [
+            'content' => AboutContent::current(),
             'seo' => [
                 'title' => 'About Us',
                 'description' => "Kenali {$settings->nama_sales}, {$settings->jabatan} dari {$settings->nama_agensi}.",

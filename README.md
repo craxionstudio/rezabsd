@@ -72,8 +72,14 @@ Untuk mematikan proses SSR: `pkill -f inertia:start-ssr`.
 
 Login ke `/admin`, lalu isi lewat menu:
 - **Pengaturan** — identitas Reza & Linktown, foto profil, nomor WhatsApp, social media, disclaimer
+- **Konten Home** — semua teks halaman Home (hero, statistik, 3 langkah proses, testimoni, CTA banner)
+- **Konten About Us** — semua teks halaman About (hero, bio 2 paragraf, kredensial, deskripsi Linktown)
 - **Produk** — listing rumah/ruko/kavling + galeri foto
 - **Artikel** — tips/info kawasan
+
+Tidak ada teks marketing yang di-hardcode di komponen React untuk Home & About — semua lewat
+dua menu Konten di atas. Untuk headline yang perlu kata dicetak miring, apit dengan tanda
+bintang, contoh: `Terasa seperti *pulang*`.
 
 Selama field foto/galeri masih kosong, halaman publik otomatis menampilkan ilustrasi SVG
 placeholder (lihat `resources/js/Components/PlaceholderArt.jsx`) — begitu foto asli di-upload,
