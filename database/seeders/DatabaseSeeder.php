@@ -2,6 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Artikel;
+use App\Models\Produk;
+use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -15,11 +18,23 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        User::firstOrCreate(
+            ['email' => 'admin@example.com'],
+            ['name' => 'Admin', 'password' => bcrypt('password')]
+        );
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        Setting::query()->firstOrCreate([], [
+            'nama_sales' => 'Reza Alhadithia',
+            'jabatan' => 'Sales Marketing Properti',
+            'nama_agensi' => 'Linktown',
+            'whatsapp' => '6281234567890',
+            'email' => 'reza@linktown.example',
+            'alamat_agensi' => 'Kantor Pemasaran Linktown',
+            'instagram' => 'https://instagram.com/username_reza',
+            'bio' => 'Reza Alhadithia adalah sales marketing properti berpengalaman yang membantu banyak keluarga menemukan hunian yang tepat.',
         ]);
+
+        Produk::factory(9)->create();
+        Artikel::factory(6)->create();
     }
 }
