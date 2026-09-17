@@ -9,6 +9,7 @@ use App\Models\LegalContent;
 use App\Models\Produk;
 use App\Models\Setting;
 use App\Models\TipeProduk;
+use App\Models\TipeRumah;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -79,7 +80,16 @@ class DatabaseSeeder extends Seeder
             TipeProduk::query()->firstOrCreate(['slug' => $tipe['slug']], $tipe);
         }
 
-        Produk::factory(9)->create();
+        Produk::factory(9)->create()->each(function (Produk $produk) {
+            $tanpaBangunan = in_array($produk->tipeProduk->slug, ['kavling', 'gudang']);
+            $jumlahTipe = $tanpaBangunan ? 1 : fake()->numberBetween(1, 4);
+
+            for ($urutan = 0; $urutan < $jumlahTipe; $urutan++) {
+                $factory = $tanpaBangunan ? TipeRumah::factory()->tanpaBangunan() : TipeRumah::factory();
+                $factory->create(['produk_id' => $produk->id, 'urutan' => $urutan]);
+            }
+        });
+
         Artikel::factory(6)->create();
     }
 }

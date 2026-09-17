@@ -21,15 +21,14 @@ class ProdukFactory extends Factory
     {
         $tipe = TipeProduk::query()->inRandomOrder()->first() ?? TipeProduk::factory()->create();
         $tipeSlug = $tipe->slug;
-        $blok = strtoupper($this->faker->randomLetter());
-        $nomor = $this->faker->numberBetween(1, 40);
+        $cluster = $this->faker->randomElement(['Eonna', 'Vasanta', 'Anara', 'Talia', 'Nara Hills', 'Serena']);
+        $kawasan = $this->faker->randomElement(['BSD', 'Serpong', 'Cibubur', 'Bintaro']);
         $nama = match ($tipeSlug) {
-            'rumah' => "Rumah Tipe {$this->faker->numberBetween(36, 90)}/{$this->faker->numberBetween(60, 120)} - Blok {$blok}{$nomor}",
-            'ruko' => "Ruko 2 Lantai - Blok {$blok}{$nomor}",
-            'gudang' => "Gudang Siap Pakai - Blok {$blok}{$nomor}",
-            default => "Kavling Siap Bangun - Blok {$blok}{$nomor}",
+            'ruko' => "{$cluster} Commercial Park",
+            'gudang' => "{$cluster} Logistics Hub",
+            'kavling' => "{$cluster} Land Estate",
+            default => "{$cluster} {$kawasan}",
         };
-        $tanpaBangunan = in_array($tipeSlug, ['kavling', 'gudang']);
 
         return [
             'nama' => $nama,
@@ -38,10 +37,6 @@ class ProdukFactory extends Factory
             'status' => $this->faker->randomElement(['primary', 'secondary']),
             'listing_type' => $this->faker->randomElement(['jual', 'jual', 'jual', 'sewa']),
             'harga' => $this->faker->numberBetween(400, 2500) * 1_000_000,
-            'luas_tanah' => $this->faker->numberBetween(60, 200),
-            'luas_bangunan' => $tanpaBangunan ? null : $this->faker->numberBetween(45, 150),
-            'kamar_tidur' => $tanpaBangunan ? null : $this->faker->numberBetween(2, 4),
-            'kamar_mandi' => $tanpaBangunan ? null : $this->faker->numberBetween(1, 3),
             'deskripsi' => '<p>'.$this->faker->paragraphs(3, true).'</p>',
             'lokasi' => $this->faker->randomElement(['Kawasan Utara', 'Kawasan Selatan', 'Kawasan Tengah']),
             'status_tayang' => 'published',

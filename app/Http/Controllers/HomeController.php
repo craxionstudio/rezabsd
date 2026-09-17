@@ -20,24 +20,28 @@ class HomeController extends Controller
 
         $highlights = Produk::query()
             ->published()
-            ->with('tipeProduk')
+            ->with(['tipeProduk', 'tipeRumahs'])
             ->latest()
             ->take(6)
             ->get()
-            ->map(fn (Produk $produk) => [
-                'nama' => $produk->nama,
-                'slug' => $produk->slug,
-                'tipe' => $produk->tipeProduk->nama,
-                'tipeSlug' => $produk->tipeProduk->slug,
-                'status' => $produk->status,
-                'listing_type' => $produk->listing_type,
-                'harga' => $produk->harga,
-                'lokasi' => $produk->lokasi,
-                'luas_tanah' => $produk->luas_tanah,
-                'kamar_tidur' => $produk->kamar_tidur,
-                'kamar_mandi' => $produk->kamar_mandi,
-                'cover' => $produk->coverImageUrl(),
-            ]);
+            ->map(function (Produk $produk) {
+                $spesifikasi = $produk->representativeTipeRumah();
+
+                return [
+                    'nama' => $produk->nama,
+                    'slug' => $produk->slug,
+                    'tipe' => $produk->tipeProduk->nama,
+                    'tipeSlug' => $produk->tipeProduk->slug,
+                    'status' => $produk->status,
+                    'listing_type' => $produk->listing_type,
+                    'harga' => $produk->harga,
+                    'lokasi' => $produk->lokasi,
+                    'luas_tanah' => $spesifikasi?->luas_tanah,
+                    'kamar_tidur' => $spesifikasi?->kamar_tidur,
+                    'kamar_mandi' => $spesifikasi?->kamar_mandi,
+                    'cover' => $produk->coverImageUrl(),
+                ];
+            });
 
         $promoBanners = PromoBanner::query()
             ->published()

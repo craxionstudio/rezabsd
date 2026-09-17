@@ -19,27 +19,31 @@ class ProdukController extends Controller
 
         $produks = Produk::query()
             ->published()
-            ->with('tipeProduk')
+            ->with(['tipeProduk', 'tipeRumahs'])
             ->when($tipeSlug, fn ($query) => $query->whereHas('tipeProduk', fn ($q) => $q->where('slug', $tipeSlug)))
             ->when($status, fn ($query) => $query->where('status', $status))
             ->when($listingType, fn ($query) => $query->where('listing_type', $listingType))
             ->latest()
             ->get()
-            ->map(fn (Produk $produk) => [
-                'nama' => $produk->nama,
-                'slug' => $produk->slug,
-                'tipe' => $produk->tipeProduk->nama,
-                'tipeSlug' => $produk->tipeProduk->slug,
-                'status' => $produk->status,
-                'listing_type' => $produk->listing_type,
-                'harga' => $produk->harga,
-                'lokasi' => $produk->lokasi,
-                'luas_tanah' => $produk->luas_tanah,
-                'luas_bangunan' => $produk->luas_bangunan,
-                'kamar_tidur' => $produk->kamar_tidur,
-                'kamar_mandi' => $produk->kamar_mandi,
-                'cover' => $produk->coverImageUrl(),
-            ]);
+            ->map(function (Produk $produk) {
+                $spesifikasi = $produk->representativeTipeRumah();
+
+                return [
+                    'nama' => $produk->nama,
+                    'slug' => $produk->slug,
+                    'tipe' => $produk->tipeProduk->nama,
+                    'tipeSlug' => $produk->tipeProduk->slug,
+                    'status' => $produk->status,
+                    'listing_type' => $produk->listing_type,
+                    'harga' => $produk->harga,
+                    'lokasi' => $produk->lokasi,
+                    'luas_tanah' => $spesifikasi?->luas_tanah,
+                    'luas_bangunan' => $spesifikasi?->luas_bangunan,
+                    'kamar_tidur' => $spesifikasi?->kamar_tidur,
+                    'kamar_mandi' => $spesifikasi?->kamar_mandi,
+                    'cover' => $produk->coverImageUrl(),
+                ];
+            });
 
         return Inertia::render('Produk/Index', [
             'produks' => $produks,
@@ -69,11 +73,12 @@ class ProdukController extends Controller
     {
         abort_unless($produk->status_tayang === 'published', 404);
 
-        $produk->load('tipeProduk');
+        $produk->load(['tipeProduk', 'tipeRumahs']);
+        $spesifikasi = $produk->representativeTipeRumah();
 
         $related = Produk::query()
             ->published()
-            ->with('tipeProduk')
+            ->with(['tipeProduk', 'tipeRumahs'])
             ->where('lokasi', $produk->lokasi)
             ->where('id', '!=', $produk->id)
             ->take(3)
@@ -98,12 +103,13 @@ class ProdukController extends Controller
                 'listing_type' => $produk->listing_type,
                 'harga' => $produk->harga,
                 'lokasi' => $produk->lokasi,
-                'luas_tanah' => $produk->luas_tanah,
-                'luas_bangunan' => $produk->luas_bangunan,
-                'kamar_tidur' => $produk->kamar_tidur,
-                'kamar_mandi' => $produk->kamar_mandi,
+                'luas_tanah' => $spesifikasi?->luas_tanah,
+                'luas_bangunan' => $spesifikasi?->luas_bangunan,
+                'kamar_tidur' => $spesifikasi?->kamar_tidur,
+                'kamar_mandi' => $spesifikasi?->kamar_mandi,
                 'deskripsi' => $produk->deskripsi,
                 'gallery' => $produk->galleryUrls(),
+                'tipeRumahNames' => $produk->tipeRumahs->pluck('nama_tipe')->all(),
             ],
             'related' => $related,
             'seo' => [

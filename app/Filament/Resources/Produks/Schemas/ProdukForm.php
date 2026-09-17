@@ -19,6 +19,7 @@ class ProdukForm
             ->components([
                 Section::make('Informasi Produk')
                     ->columns(2)
+                    ->description('Spesifikasi LT/LB/kamar diisi per Tipe Rumah di tab bawah setelah produk ini disimpan.')
                     ->schema([
                         TextInput::make('nama')
                             ->required()
@@ -55,16 +56,6 @@ class ProdukForm
                             ->prefix('Rp'),
                         TextInput::make('lokasi')
                             ->maxLength(255),
-                        TextInput::make('luas_tanah')
-                            ->numeric()
-                            ->suffix('m²'),
-                        TextInput::make('luas_bangunan')
-                            ->numeric()
-                            ->suffix('m²'),
-                        TextInput::make('kamar_tidur')
-                            ->numeric(),
-                        TextInput::make('kamar_mandi')
-                            ->numeric(),
                         Select::make('status_tayang')
                             ->options([
                                 'draft' => 'Draft',

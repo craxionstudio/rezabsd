@@ -2,23 +2,15 @@ import { Link, usePage } from '@inertiajs/react';
 import SiteLayout from '../../Layouts/SiteLayout';
 import Seo from '../../Components/Seo';
 import ProdukListingCard from '../../Components/ProdukListingCard';
-import { DetailMainArt, DetailThumb1Art, DetailThumb2Art, DetailThumb3Art } from '../../Components/PlaceholderArt';
+import { produkArtFor } from '../../Components/PlaceholderArt';
 import { formatHargaSingkat, waLink } from '../../lib/format';
 
 const STATUS_LABEL = { primary: 'Primary', secondary: 'Secondary' };
 const LISTING_TYPE_LABEL = { jual: 'Dijual', sewa: 'Disewakan' };
-
-function GalleryImage({ url, Fallback, className }) {
-    return url ? (
-        <img src={url} alt="" className={`${className} object-cover`} />
-    ) : (
-        <Fallback className={className} />
-    );
-}
+const GALLERY_FALLBACK_COUNT = 5;
 
 export default function Show({ produk, related, seo, jsonLd }) {
     const { settings } = usePage().props;
-    const [main, thumb1, thumb2, thumb3] = produk.gallery;
 
     return (
         <SiteLayout>
@@ -31,22 +23,37 @@ export default function Show({ produk, related, seo, jsonLd }) {
                 / <span className="text-[#1E1C18]">{produk.nama}</span>
             </div>
 
+            {produk.tipeRumahNames.length > 0 && (
+                <section className="max-w-6xl mx-auto px-6 pb-8">
+                    <p className="text-sm text-[#6E7C58] mb-3">Tersedia tipe</p>
+                    <div className="flex flex-wrap gap-2">
+                        {produk.tipeRumahNames.map((nama) => (
+                            <span key={nama} className="px-4 py-2 border border-[#DAD4C5] text-sm">
+                                {nama}
+                            </span>
+                        ))}
+                    </div>
+                </section>
+            )}
+
             <section className="max-w-6xl mx-auto px-6 pb-4">
-                <div className="grid md:grid-cols-[2fr_1fr] gap-3">
-                    <div className="h-[380px] overflow-hidden">
-                        <GalleryImage url={main} Fallback={DetailMainArt} className="w-full h-full" />
-                    </div>
-                    <div className="grid grid-rows-3 gap-3">
-                        <div className="overflow-hidden">
-                            <GalleryImage url={thumb1} Fallback={DetailThumb1Art} className="w-full h-full" />
-                        </div>
-                        <div className="overflow-hidden">
-                            <GalleryImage url={thumb2} Fallback={DetailThumb2Art} className="w-full h-full" />
-                        </div>
-                        <div className="overflow-hidden">
-                            <GalleryImage url={thumb3} Fallback={DetailThumb3Art} className="w-full h-full" />
-                        </div>
-                    </div>
+                <div className="flex gap-3 h-[260px] overflow-x-auto">
+                    {(produk.gallery.length > 0
+                        ? produk.gallery
+                        : Array.from({ length: GALLERY_FALLBACK_COUNT })
+                    ).map((url, index) => {
+                        const Art = produkArtFor(index);
+
+                        return (
+                            <div key={index} className="aspect-[3/4] h-full flex-shrink-0 overflow-hidden">
+                                {url ? (
+                                    <img src={url} alt={produk.nama} className="w-full h-full object-cover" />
+                                ) : (
+                                    <Art className="w-full h-full" />
+                                )}
+                            </div>
+                        );
+                    })}
                 </div>
             </section>
 
@@ -75,12 +82,10 @@ export default function Show({ produk, related, seo, jsonLd }) {
                             <span className="text-[#6B6459]">Kamar mandi</span>
                             <span>{produk.kamar_mandi ?? '-'}</span>
                         </div>
-                        {produk.lokasi && (
-                            <div className="flex justify-between py-3">
-                                <span className="text-[#6B6459]">Lokasi</span>
-                                <span>{produk.lokasi}</span>
-                            </div>
-                        )}
+                        <div className="flex justify-between py-3">
+                            <span className="text-[#6B6459]">Status</span>
+                            <span>Siap huni</span>
+                        </div>
                     </div>
 
                     {produk.deskripsi && (

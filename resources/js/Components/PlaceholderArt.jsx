@@ -203,60 +203,6 @@ export function ArtikelIconCompareArt({ className }) {
     );
 }
 
-export function DetailMainArt({ className }) {
-    return (
-        <svg viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice" className={className}>
-            <rect width="400" height="260" fill="#EDE8DA" />
-            <circle cx="335" cy="55" r="24" fill="#F0DCA8" />
-            <rect y="195" width="400" height="65" fill="#8B9A76" />
-            <rect x="45" y="155" width="8" height="45" fill="#5B4636" />
-            <circle cx="49" cy="140" r="28" fill="#6E7C58" />
-            <polygon points="120,145 230,70 340,145" fill="#A66B52" />
-            <rect x="140" y="145" width="180" height="90" fill="#EDE6D3" />
-            <rect x="200" y="180" width="40" height="55" fill="#5B4636" />
-            <rect x="160" y="160" width="34" height="34" fill="#E8C88A" stroke="#3B372C" strokeWidth="2.5" />
-            <rect x="265" y="160" width="34" height="34" fill="#E8C88A" stroke="#3B372C" strokeWidth="2.5" />
-        </svg>
-    );
-}
-
-export function DetailThumb1Art({ className }) {
-    return (
-        <svg viewBox="0 0 200 130" preserveAspectRatio="xMidYMid slice" className={className}>
-            <rect width="200" height="130" fill="#DCD3B8" />
-            <rect x="0" y="90" width="200" height="40" fill="#B9C4C0" />
-            <rect x="130" y="20" width="45" height="55" fill="#E8C88A" stroke="#3B372C" strokeWidth="1.5" />
-            <rect x="20" y="65" width="90" height="30" rx="4" fill="#A66B52" />
-            <rect x="20" y="50" width="20" height="22" fill="#8B5540" />
-            <rect x="90" y="50" width="20" height="22" fill="#8B5540" />
-        </svg>
-    );
-}
-
-export function DetailThumb2Art({ className }) {
-    return (
-        <svg viewBox="0 0 200 130" preserveAspectRatio="xMidYMid slice" className={className}>
-            <rect width="200" height="130" fill="#EDE6D3" />
-            <rect x="0" y="30" width="200" height="30" fill="#B9C4C0" />
-            <rect x="0" y="80" width="200" height="50" fill="#6E7C58" />
-            <rect x="15" y="88" width="35" height="15" fill="none" stroke="#3B372C" strokeWidth="1.3" />
-            <rect x="60" y="88" width="35" height="15" fill="none" stroke="#3B372C" strokeWidth="1.3" />
-        </svg>
-    );
-}
-
-export function DetailThumb3Art({ className }) {
-    return (
-        <svg viewBox="0 0 200 130" preserveAspectRatio="xMidYMid slice" className={className}>
-            <rect width="200" height="130" fill="#DCD3B8" />
-            <rect x="0" y="95" width="200" height="35" fill="#8B9A76" />
-            <rect x="25" y="55" width="90" height="45" rx="3" fill="#A66B52" />
-            <rect x="25" y="45" width="30" height="20" rx="4" fill="#EDE6D3" stroke="#3B372C" strokeWidth="1.3" />
-            <rect x="140" y="30" width="35" height="45" fill="#E8C88A" stroke="#3B372C" strokeWidth="1.3" />
-        </svg>
-    );
-}
-
 /**
  * Fallback card ilustrasi, dipilih siklis berdasarkan index. Tipe produk kini
  * dikelola bebas lewat CMS (bisa nama apa saja), jadi ilustrasi tidak lagi

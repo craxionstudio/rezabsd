@@ -19,10 +19,6 @@ return new class extends Migration
             $table->enum('status', ['primary', 'secondary']);
             $table->enum('listing_type', ['jual', 'sewa'])->default('jual');
             $table->unsignedBigInteger('harga');
-            $table->unsignedInteger('luas_tanah')->nullable();
-            $table->unsignedInteger('luas_bangunan')->nullable();
-            $table->unsignedTinyInteger('kamar_tidur')->nullable();
-            $table->unsignedTinyInteger('kamar_mandi')->nullable();
             $table->text('deskripsi')->nullable();
             $table->string('lokasi')->nullable();
             $table->string('meta_title')->nullable();

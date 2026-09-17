@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -22,10 +23,6 @@ class Produk extends Model implements HasMedia
         'status',
         'listing_type',
         'harga',
-        'luas_tanah',
-        'luas_bangunan',
-        'kamar_tidur',
-        'kamar_mandi',
         'deskripsi',
         'lokasi',
         'meta_title',
@@ -37,10 +34,6 @@ class Produk extends Model implements HasMedia
     {
         return [
             'harga' => 'integer',
-            'luas_tanah' => 'integer',
-            'luas_bangunan' => 'integer',
-            'kamar_tidur' => 'integer',
-            'kamar_mandi' => 'integer',
         ];
     }
 
@@ -52,6 +45,20 @@ class Produk extends Model implements HasMedia
     public function tipeProduk(): BelongsTo
     {
         return $this->belongsTo(TipeProduk::class);
+    }
+
+    public function tipeRumahs(): HasMany
+    {
+        return $this->hasMany(TipeRumah::class)->orderBy('urutan');
+    }
+
+    /**
+     * The TipeRumah whose specs (LT/LB/kamar) represent this Produk on
+     * listing cards and the detail page — the one with the lowest urutan.
+     */
+    public function representativeTipeRumah(): ?TipeRumah
+    {
+        return $this->tipeRumahs->first();
     }
 
     public function scopePublished($query)
