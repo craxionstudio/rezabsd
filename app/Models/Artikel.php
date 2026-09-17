@@ -33,7 +33,7 @@ class Artikel extends Model implements HasMedia
 
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('featured_image')->singleFile();
+        $this->addMediaCollection('featured_image')->singleFile()->useDisk('public');
     }
 
     public function scopePublished($query)

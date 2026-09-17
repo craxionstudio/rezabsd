@@ -44,7 +44,7 @@ class Produk extends Model implements HasMedia
 
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('galeri');
+        $this->addMediaCollection('galeri')->useDisk('public');
     }
 
     public function scopePublished($query)
