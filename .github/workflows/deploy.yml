@@ -1,0 +1,88 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - claude/website-creation-running-dhxwu6
+      - main
+      - master
+  workflow_dispatch:
+
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to Production VPS
+    runs-on: ubuntu-latest
+    steps:
+      - name: Execute deployment commands via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          script_stop: true
+          envs: GITHUB_REF_NAME
+          script: |
+            set -e
+            echo "🚀 Memulai proses deployment..."
+
+            TARGET_DIR="${{ secrets.DEPLOY_PATH }}"
+            if [ -z "$TARGET_DIR" ]; then
+              echo "❌ Error: Secret DEPLOY_PATH belum disetting di repository GitHub!"
+              exit 1
+            fi
+
+            cd "$TARGET_DIR"
+
+            # Hindari issue 'dubious ownership' di git
+            git config --global --add safe.directory "$TARGET_DIR"
+
+            # 1. Aktifkan Maintenance Mode
+            echo "🔒 Mengaktifkan Maintenance Mode..."
+            php artisan down --retry=60 || true
+
+            # 2. Tarik commit terbaru dari branch yang di-push
+            echo "📥 Mengambil source code terbaru (${GITHUB_REF_NAME:-claude/website-creation-running-dhxwu6})..."
+            git fetch origin "${GITHUB_REF_NAME:-claude/website-creation-running-dhxwu6}"
+            git reset --hard "origin/${GITHUB_REF_NAME:-claude/website-creation-running-dhxwu6}"
+
+            # 3. Update dependensi Composer (Production mode)
+            echo "📦 Menginstal dependensi Composer..."
+            composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+
+            # 4. Install dependensi NPM dan compile Vite / SSR assets
+            echo "⚡ Melakukan build asset Vite..."
+            npm ci || npm install
+            npm run build
+
+            # 5. Eksekusi migrasi database
+            echo "🗄️ Menjalankan migrasi database..."
+            php artisan migrate --force
+
+            # 6. Bersihkan dan optimize cache Laravel & Filament
+            echo "⚡ Mengoptimasi cache Laravel & Filament..."
+            php artisan optimize:clear
+            php artisan optimize
+            php artisan filament:optimize || true
+            php artisan storage:link || true
+
+            # 7. Sesuaikan permission folder storage dan cache
+            echo "🔧 Memeriksa permission folder storage & cache..."
+            chmod -R 775 storage bootstrap/cache 2>/dev/null || true
+            if [ "$(id -u)" = "0" ]; then
+              chown -R www-data:www-data storage bootstrap/cache 2>/dev/null || true
+            fi
+
+            # 8. Restart queue worker jika ada
+            echo "🔄 Restart queue worker (jika ada)..."
+            php artisan queue:restart || true
+
+            # 9. Matikan Maintenance Mode
+            echo "🔓 Menonaktifkan Maintenance Mode..."
+            php artisan up
+
+            echo "✅ Deployment selesai dan berhasil!"
