@@ -27,7 +27,12 @@ di-upload lewat admin panel bisa diakses browser (symlink `public/storage` → `
 Seeder akan membuat:
 - User admin: **admin@example.com** / **password**
 - 1 record Settings (identitas Reza + Linktown, disclaimer)
+- 4 Tipe Properti default: Rumah, Ruko, Kavling, Gudang
 - 9 contoh Produk & 6 contoh Artikel (dummy, tanpa foto)
+
+> **Sudah pernah migrate sebelumnya?** Beberapa migration di-edit langsung (bukan nambah
+> migration baru) selama masa pengembangan ini, jadi kalau database lokal kamu sudah ada isinya
+> dari commit lama, jalankan ulang `php artisan migrate:fresh --seed` supaya skema-nya sinkron.
 
 > Default database pakai **SQLite** (`database/database.sqlite`) supaya gampang dijalankan
 > lokal. Untuk production, ganti `DB_CONNECTION` di `.env` ke `mysql` sesuai spec.
@@ -72,9 +77,12 @@ Untuk mematikan proses SSR: `pkill -f inertia:start-ssr`.
 
 Login ke `/admin`, lalu isi lewat menu:
 - **Pengaturan** — identitas Reza & Linktown, foto profil, nomor WhatsApp, social media, disclaimer
-- **Konten Home** — semua teks halaman Home (hero, statistik, 3 langkah proses, testimoni, CTA banner)
+- **Konten Home** — semua teks halaman Home (hero, 3 langkah proses, CTA banner)
 - **Konten About Us** — semua teks halaman About (hero, bio 2 paragraf, kredensial, deskripsi Linktown)
-- **Produk** — listing rumah/ruko/kavling + galeri foto
+- **Kebijakan & Ketentuan** — isi Kebijakan Privasi dan Syarat & Ketentuan (link-nya ada di footer)
+- **Tipe Properti** — atur sendiri daftar tipe properti (default: Rumah, Ruko, Kavling, Gudang) — tambah/hapus tipe tanpa perlu ubah kode
+- **Promo Banner** — banner marketing di Home (new launching/promosi), bisa lebih dari satu, tampil sebagai carousel manual (tombol panah, tidak auto-slide). Rasio potrait 3:4 di mobile, landscape 16:6 di desktop
+- **Produk** — listing rumah/ruko/kavling/dst, status primary/secondary, jual/sewa, + galeri foto
 - **Artikel** — tips/info kawasan
 
 Tidak ada teks marketing yang di-hardcode di komponen React untuk Home & About — semua lewat
