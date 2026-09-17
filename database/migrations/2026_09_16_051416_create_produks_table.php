@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('nama');
             $table->string('slug')->unique();
-            $table->enum('tipe', ['rumah', 'ruko', 'kavling']);
+            $table->foreignId('tipe_produk_id')->constrained('tipe_produks')->restrictOnDelete();
             $table->enum('status', ['primary', 'secondary']);
+            $table->enum('listing_type', ['jual', 'sewa'])->default('jual');
             $table->unsignedBigInteger('harga');
             $table->unsignedInteger('luas_tanah')->nullable();
             $table->unsignedInteger('luas_bangunan')->nullable();

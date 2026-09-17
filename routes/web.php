@@ -3,6 +3,7 @@
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\ArtikelController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LegalController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
@@ -15,5 +16,8 @@ Route::get('/produk/{produk:slug}', [ProdukController::class, 'show'])->name('pr
 
 Route::get('/artikel', [ArtikelController::class, 'index'])->name('artikel.index');
 Route::get('/artikel/{artikel:slug}', [ArtikelController::class, 'show'])->name('artikel.show');
+
+Route::get('/kebijakan-privasi', [LegalController::class, 'privacy'])->name('legal.privacy');
+Route::get('/syarat-ketentuan', [LegalController::class, 'terms'])->name('legal.terms');
 
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');

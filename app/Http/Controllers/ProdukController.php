@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Produk;
 use App\Models\Setting;
+use App\Models\TipeProduk;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -12,17 +13,25 @@ class ProdukController extends Controller
 {
     public function index(Request $request): Response
     {
+        $tipeSlug = $request->string('tipe')->toString();
+        $status = $request->string('status')->toString();
+        $listingType = $request->string('listing_type')->toString();
+
         $produks = Produk::query()
             ->published()
-            ->when($request->string('tipe')->toString(), fn ($query, $tipe) => $query->where('tipe', $tipe))
-            ->when($request->string('status')->toString(), fn ($query, $status) => $query->where('status', $status))
+            ->with('tipeProduk')
+            ->when($tipeSlug, fn ($query) => $query->whereHas('tipeProduk', fn ($q) => $q->where('slug', $tipeSlug)))
+            ->when($status, fn ($query) => $query->where('status', $status))
+            ->when($listingType, fn ($query) => $query->where('listing_type', $listingType))
             ->latest()
             ->get()
             ->map(fn (Produk $produk) => [
                 'nama' => $produk->nama,
                 'slug' => $produk->slug,
-                'tipe' => $produk->tipe,
+                'tipe' => $produk->tipeProduk->nama,
+                'tipeSlug' => $produk->tipeProduk->slug,
                 'status' => $produk->status,
+                'listing_type' => $produk->listing_type,
                 'harga' => $produk->harga,
                 'lokasi' => $produk->lokasi,
                 'luas_tanah' => $produk->luas_tanah,
@@ -34,7 +43,8 @@ class ProdukController extends Controller
 
         return Inertia::render('Produk/Index', [
             'produks' => $produks,
-            'filters' => $request->only(['tipe', 'status']),
+            'tipeOptions' => TipeProduk::query()->orderBy('urutan')->get(['nama', 'slug']),
+            'filters' => $request->only(['tipe', 'status', 'listing_type']),
             'seo' => [
                 'title' => 'Produk',
                 'description' => 'Daftar listing rumah, ruko, dan kavling yang tersedia.',
@@ -59,8 +69,11 @@ class ProdukController extends Controller
     {
         abort_unless($produk->status_tayang === 'published', 404);
 
+        $produk->load('tipeProduk');
+
         $related = Produk::query()
             ->published()
+            ->with('tipeProduk')
             ->where('lokasi', $produk->lokasi)
             ->where('id', '!=', $produk->id)
             ->take(3)
@@ -68,8 +81,9 @@ class ProdukController extends Controller
             ->map(fn (Produk $item) => [
                 'nama' => $item->nama,
                 'slug' => $item->slug,
-                'tipe' => $item->tipe,
+                'tipe' => $item->tipeProduk->nama,
                 'status' => $item->status,
+                'listing_type' => $item->listing_type,
                 'harga' => $item->harga,
                 'lokasi' => $item->lokasi,
                 'cover' => $item->coverImageUrl(),
@@ -79,8 +93,9 @@ class ProdukController extends Controller
             'produk' => [
                 'nama' => $produk->nama,
                 'slug' => $produk->slug,
-                'tipe' => $produk->tipe,
+                'tipe' => $produk->tipeProduk->nama,
                 'status' => $produk->status,
+                'listing_type' => $produk->listing_type,
                 'harga' => $produk->harga,
                 'lokasi' => $produk->lokasi,
                 'luas_tanah' => $produk->luas_tanah,

@@ -257,14 +257,20 @@ export function DetailThumb3Art({ className }) {
     );
 }
 
-/** Fallback card ilustrasi per tipe produk, dipilih siklis berdasarkan index. */
-const PRODUK_ART_BY_TIPE = {
-    rumah: [CardRumah4590Art, CardRumah60120Art],
-    ruko: [CardRukoDuaLantaiArt, CardRukoTigaLantaiArt],
-    kavling: [CardKavlingSiapBangunArt, CardKavlingPojokTamanArt],
-};
+/**
+ * Fallback card ilustrasi, dipilih siklis berdasarkan index. Tipe produk kini
+ * dikelola bebas lewat CMS (bisa nama apa saja), jadi ilustrasi tidak lagi
+ * dipetakan per nama tipe — cukup diputar dari daftar generik ini.
+ */
+const PRODUK_ART_VARIANTS = [
+    CardRumah4590Art,
+    CardRukoDuaLantaiArt,
+    CardKavlingSiapBangunArt,
+    CardRumah60120Art,
+    CardRukoTigaLantaiArt,
+    CardKavlingPojokTamanArt,
+];
 
-export function produkArtFor(tipe, index = 0) {
-    const variants = PRODUK_ART_BY_TIPE[tipe] ?? [CardRumah4590Art];
-    return variants[index % variants.length];
+export function produkArtFor(index = 0) {
+    return PRODUK_ART_VARIANTS[index % PRODUK_ART_VARIANTS.length];
 }

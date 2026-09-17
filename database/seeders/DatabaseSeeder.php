@@ -5,8 +5,10 @@ namespace Database\Seeders;
 use App\Models\AboutContent;
 use App\Models\Artikel;
 use App\Models\HomeContent;
+use App\Models\LegalContent;
 use App\Models\Produk;
 use App\Models\Setting;
+use App\Models\TipeProduk;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -40,20 +42,12 @@ class DatabaseSeeder extends Seeder
             'hero_headline' => 'Temukan rumah yang terasa seperti *pulang*',
             'hero_subtext' => 'Reza bantu Anda cari rumah, ruko, atau kavling primary dan secondary di kawasan ini — dari konsultasi awal sampai serah terima kunci.',
             'hero_cta_label' => 'Lihat listing',
-            'stat_1_value' => '50+',
-            'stat_1_label' => 'Unit terjual',
-            'stat_2_value' => '5',
-            'stat_2_label' => 'Tahun pengalaman',
-            'stat_3_value' => '4.9',
-            'stat_3_label' => 'Rating klien dari 5',
             'process_step_1_title' => 'Konsultasi kebutuhan',
             'process_step_1_desc' => 'Cerita budget, tipe unit, dan target waktu — Reza bantu petakan opsi yang cocok.',
             'process_step_2_title' => 'Survei & rekomendasi',
             'process_step_2_desc' => 'Kunjungi unit langsung, bandingkan pilihan primary dan secondary di kawasan ini.',
             'process_step_3_title' => 'Proses closing',
             'process_step_3_desc' => 'Reza dampingi sampai administrasi kelar dan kunci di tangan Anda.',
-            'testimonial_quote' => 'Dibantu dari awal cari unit sampai deal, prosesnya jelas dan nggak buru-buru.',
-            'testimonial_name' => 'Budi Santoso',
             'cta_banner_title' => 'Siap cari unit yang pas?',
             'cta_banner_subtitle' => 'Konsultasi gratis, Reza bantu petakan pilihan sesuai budget dan kebutuhan Anda.',
             'cta_banner_button_label' => 'Chat via WhatsApp',
@@ -70,6 +64,20 @@ class DatabaseSeeder extends Seeder
             'credential_kontak' => '0812-xxxx-xxxx',
             'linktown_description' => 'Linktown adalah agen properti tempat saya bernaung. Bukan pengembang, bukan pengelola kawasan — perannya menghubungkan pembeli dengan unit primary dari pengembang maupun secondary dari pemilik lama, lewat sales seperti saya yang pegang area tertentu.',
         ]);
+
+        LegalContent::query()->firstOrCreate([], [
+            'privacy_policy' => '<p>Kami menghargai privasi Anda. Data yang Anda kirimkan lewat formulir kontak atau WhatsApp hanya digunakan untuk keperluan komunikasi terkait properti yang Anda tanyakan, dan tidak dibagikan ke pihak ketiga tanpa izin.</p>',
+            'terms_conditions' => '<p>Informasi produk di website ini bersifat pemasaran dan dapat berubah sewaktu-waktu tanpa pemberitahuan. Segala transaksi properti tetap mengikuti proses dan dokumen resmi yang berlaku.</p>',
+        ]);
+
+        foreach ([
+            ['nama' => 'Rumah', 'slug' => 'rumah', 'urutan' => 1],
+            ['nama' => 'Ruko', 'slug' => 'ruko', 'urutan' => 2],
+            ['nama' => 'Kavling', 'slug' => 'kavling', 'urutan' => 3],
+            ['nama' => 'Gudang', 'slug' => 'gudang', 'urutan' => 4],
+        ] as $tipe) {
+            TipeProduk::query()->firstOrCreate(['slug' => $tipe['slug']], $tipe);
+        }
 
         Produk::factory(9)->create();
         Artikel::factory(6)->create();

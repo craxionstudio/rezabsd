@@ -5,8 +5,8 @@ import ProdukListingCard from '../../Components/ProdukListingCard';
 import { DetailMainArt, DetailThumb1Art, DetailThumb2Art, DetailThumb3Art } from '../../Components/PlaceholderArt';
 import { formatHargaSingkat, waLink } from '../../lib/format';
 
-const TIPE_LABEL = { rumah: 'Rumah', ruko: 'Ruko', kavling: 'Kavling' };
 const STATUS_LABEL = { primary: 'Primary', secondary: 'Secondary' };
+const LISTING_TYPE_LABEL = { jual: 'Dijual', sewa: 'Disewakan' };
 
 function GalleryImage({ url, Fallback, className }) {
     return url ? (
@@ -53,7 +53,7 @@ export default function Show({ produk, related, seo, jsonLd }) {
             <section className="max-w-6xl mx-auto px-6 py-10 grid md:grid-cols-[1.3fr_1fr] gap-14 items-start">
                 <div>
                     <p className="text-sm text-[#6E7C58] mb-3">
-                        {STATUS_LABEL[produk.status]} · {TIPE_LABEL[produk.tipe]}
+                        {STATUS_LABEL[produk.status]} · {produk.tipe} · {LISTING_TYPE_LABEL[produk.listing_type]}
                     </p>
                     <h1 className="font-display text-3xl md:text-4xl mb-3">{produk.nama}</h1>
                     <p className="font-display text-2xl mb-8">{formatHargaSingkat(produk.harga)}</p>
@@ -120,7 +120,6 @@ export default function Show({ produk, related, seo, jsonLd }) {
                                 produk={item}
                                 index={index}
                                 showSpecs={false}
-                                imgHeightClass="h-48"
                             />
                         ))}
                     </div>

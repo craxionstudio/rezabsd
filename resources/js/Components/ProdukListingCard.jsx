@@ -2,27 +2,29 @@ import { Link } from '@inertiajs/react';
 import { produkArtFor } from './PlaceholderArt';
 import { formatHargaSingkat } from '../lib/format';
 
-const TIPE_LABEL = { rumah: 'Rumah', ruko: 'Ruko', kavling: 'Kavling' };
 const STATUS_LABEL = { primary: 'Primary', secondary: 'Secondary' };
 
-export default function ProdukListingCard({ produk, index = 0, showTipeInLabel = true, showSpecs = true, imgHeightClass = 'h-56' }) {
-    const Art = produkArtFor(produk.tipe, index);
+export default function ProdukListingCard({ produk, index = 0, showTipeInLabel = true, showSpecs = true }) {
+    const Art = produkArtFor(index);
     const label = showTipeInLabel
-        ? `${STATUS_LABEL[produk.status]} · ${TIPE_LABEL[produk.tipe]}`
+        ? `${STATUS_LABEL[produk.status]} · ${produk.tipe}`
         : STATUS_LABEL[produk.status];
 
     let specs = formatHargaSingkat(produk.harga);
+    if (produk.listing_type === 'sewa') {
+        specs += ' · Disewakan';
+    }
     if (showSpecs) {
-        if (produk.tipe === 'kavling' && produk.luas_tanah) {
-            specs += ` · ${produk.luas_tanah} m²`;
-        } else if (produk.kamar_tidur || produk.kamar_mandi) {
+        if (produk.kamar_tidur || produk.kamar_mandi) {
             specs += ` · ${produk.kamar_tidur ?? '-'} KT, ${produk.kamar_mandi ?? '-'} KM`;
+        } else if (produk.luas_tanah) {
+            specs += ` · ${produk.luas_tanah} m²`;
         }
     }
 
     return (
         <Link href={`/produk/${produk.slug}`} className="group block">
-            <div className={`${imgHeightClass} mb-4 overflow-hidden`}>
+            <div className="aspect-[3/4] mb-4 overflow-hidden">
                 {produk.cover ? (
                     <img
                         src={produk.cover}

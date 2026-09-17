@@ -28,18 +28,25 @@ class ProdukForm
                             ->required()
                             ->unique(ignoreRecord: true)
                             ->maxLength(255),
-                        Select::make('tipe')
-                            ->options([
-                                'rumah' => 'Rumah',
-                                'ruko' => 'Ruko',
-                                'kavling' => 'Kavling',
-                            ])
+                        Select::make('tipe_produk_id')
+                            ->label('Tipe Properti')
+                            ->relationship('tipeProduk', 'nama')
+                            ->searchable()
+                            ->preload()
                             ->required(),
                         Select::make('status')
                             ->options([
                                 'primary' => 'Primary',
                                 'secondary' => 'Secondary',
                             ])
+                            ->required(),
+                        Select::make('listing_type')
+                            ->label('Jual / Sewa')
+                            ->options([
+                                'jual' => 'Jual',
+                                'sewa' => 'Sewa',
+                            ])
+                            ->default('jual')
                             ->required(),
                         TextInput::make('harga')
                             ->required()

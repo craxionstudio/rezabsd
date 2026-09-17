@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Artikel;
 use App\Models\HomeContent;
 use App\Models\Produk;
+use App\Models\PromoBanner;
 use App\Models\Setting;
+use App\Models\TipeProduk;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -18,20 +20,33 @@ class HomeController extends Controller
 
         $highlights = Produk::query()
             ->published()
+            ->with('tipeProduk')
             ->latest()
             ->take(6)
             ->get()
             ->map(fn (Produk $produk) => [
                 'nama' => $produk->nama,
                 'slug' => $produk->slug,
-                'tipe' => $produk->tipe,
+                'tipe' => $produk->tipeProduk->nama,
+                'tipeSlug' => $produk->tipeProduk->slug,
                 'status' => $produk->status,
+                'listing_type' => $produk->listing_type,
                 'harga' => $produk->harga,
                 'lokasi' => $produk->lokasi,
                 'luas_tanah' => $produk->luas_tanah,
                 'kamar_tidur' => $produk->kamar_tidur,
                 'kamar_mandi' => $produk->kamar_mandi,
                 'cover' => $produk->coverImageUrl(),
+            ]);
+
+        $promoBanners = PromoBanner::query()
+            ->published()
+            ->orderBy('urutan')
+            ->get()
+            ->map(fn (PromoBanner $banner) => [
+                'judul' => $banner->judul,
+                'link_url' => $banner->link_url,
+                'gambar' => $banner->gambarUrl(),
             ]);
 
         $artikelHighlights = Artikel::query()
@@ -53,20 +68,12 @@ class HomeController extends Controller
                     'hero_headline',
                     'hero_subtext',
                     'hero_cta_label',
-                    'stat_1_value',
-                    'stat_1_label',
-                    'stat_2_value',
-                    'stat_2_label',
-                    'stat_3_value',
-                    'stat_3_label',
                     'process_step_1_title',
                     'process_step_1_desc',
                     'process_step_2_title',
                     'process_step_2_desc',
                     'process_step_3_title',
                     'process_step_3_desc',
-                    'testimonial_quote',
-                    'testimonial_name',
                     'cta_banner_title',
                     'cta_banner_subtitle',
                     'cta_banner_button_label',
@@ -74,6 +81,8 @@ class HomeController extends Controller
                 'hero_image' => $homeContent->heroImageUrl(),
             ],
             'highlights' => $highlights,
+            'tipeOptions' => TipeProduk::query()->orderBy('urutan')->get(['nama', 'slug']),
+            'promoBanners' => $promoBanners,
             'artikelHighlights' => $artikelHighlights,
             'seo' => [
                 'title' => 'Home',

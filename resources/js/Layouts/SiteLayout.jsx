@@ -70,9 +70,19 @@ export default function SiteLayout({ children }) {
                         {settings.email && <p className="text-sm">{settings.email}</p>}
                     </div>
                 </div>
-                <div className="max-w-6xl mx-auto px-6 pb-8 text-xs text-[#8A8471] border-t border-[#DAD4C5] pt-6">
-                    Website independen milik {settings.nama_sales}, sales dari {settings.nama_agensi}. Bukan situs
-                    resmi developer/kawasan. &copy; {new Date().getFullYear()} {settings.nama_sales}.
+                <div className="max-w-6xl mx-auto px-6 pb-8 text-xs text-[#8A8471] border-t border-[#DAD4C5] pt-6 flex flex-wrap items-center justify-between gap-3">
+                    <p>
+                        Website independen milik {settings.nama_sales}, sales dari {settings.nama_agensi}. Bukan
+                        situs resmi developer/kawasan. &copy; {new Date().getFullYear()} {settings.nama_sales}.
+                    </p>
+                    <div className="flex gap-4">
+                        <Link href="/kebijakan-privasi" className="hover:text-[#1E1C18] transition-colors">
+                            Kebijakan Privasi
+                        </Link>
+                        <Link href="/syarat-ketentuan" className="hover:text-[#1E1C18] transition-colors">
+                            Syarat &amp; Ketentuan
+                        </Link>
+                    </div>
                 </div>
             </footer>
         </div>

@@ -60,16 +60,6 @@ class ManageHomeContent extends Page implements HasForms
                             ->label('Label tombol CTA hero')
                             ->required(),
                     ]),
-                Section::make('Statistik')
-                    ->columns(3)
-                    ->schema([
-                        TextInput::make('stat_1_value')->label('Angka 1')->required(),
-                        TextInput::make('stat_1_label')->label('Label 1')->required(),
-                        TextInput::make('stat_2_value')->label('Angka 2')->required(),
-                        TextInput::make('stat_2_label')->label('Label 2')->required(),
-                        TextInput::make('stat_3_value')->label('Angka 3')->required(),
-                        TextInput::make('stat_3_label')->label('Label 3')->required(),
-                    ]),
                 Section::make('Proses (3 langkah)')
                     ->schema([
                         TextInput::make('process_step_1_title')->label('Judul langkah 1')->required(),
@@ -78,11 +68,6 @@ class ManageHomeContent extends Page implements HasForms
                         Textarea::make('process_step_2_desc')->label('Deskripsi langkah 2')->rows(2)->required(),
                         TextInput::make('process_step_3_title')->label('Judul langkah 3')->required(),
                         Textarea::make('process_step_3_desc')->label('Deskripsi langkah 3')->rows(2)->required(),
-                    ]),
-                Section::make('Testimoni')
-                    ->schema([
-                        Textarea::make('testimonial_quote')->rows(2)->required(),
-                        TextInput::make('testimonial_name')->required(),
                     ]),
                 Section::make('CTA Banner (sebelum footer)')
                     ->schema([

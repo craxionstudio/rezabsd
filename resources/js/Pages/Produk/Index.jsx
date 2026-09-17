@@ -3,20 +3,19 @@ import SiteLayout from '../../Layouts/SiteLayout';
 import Seo from '../../Components/Seo';
 import ProdukListingCard from '../../Components/ProdukListingCard';
 
-const tipeTabs = [
-    { value: '', label: 'Semua tipe' },
-    { value: 'rumah', label: 'Rumah' },
-    { value: 'ruko', label: 'Ruko' },
-    { value: 'kavling', label: 'Kavling' },
-];
-
-const statusTabs = [
+const statusOptions = [
     { value: '', label: 'Semua status' },
     { value: 'primary', label: 'Primary' },
     { value: 'secondary', label: 'Secondary' },
 ];
 
-export default function Index({ produks, filters, seo, jsonLd }) {
+const listingTypeOptions = [
+    { value: '', label: 'Jual & Sewa' },
+    { value: 'jual', label: 'Jual' },
+    { value: 'sewa', label: 'Sewa' },
+];
+
+export default function Index({ produks, tipeOptions, filters, seo, jsonLd }) {
     function updateFilter(key, value) {
         router.get(
             '/produk',
@@ -44,9 +43,10 @@ export default function Index({ produks, filters, seo, jsonLd }) {
                         onChange={(event) => updateFilter('tipe', event.target.value)}
                         className="px-4 py-2 rounded-full border border-[#DAD4C5] bg-[#F4F1E9] text-sm text-[#1E1C18]"
                     >
-                        {tipeTabs.map((tab) => (
-                            <option key={tab.value} value={tab.value}>
-                                {tab.label}
+                        <option value="">Semua tipe</option>
+                        {tipeOptions.map((tipe) => (
+                            <option key={tipe.slug} value={tipe.slug}>
+                                {tipe.nama}
                             </option>
                         ))}
                     </select>
@@ -55,9 +55,20 @@ export default function Index({ produks, filters, seo, jsonLd }) {
                         onChange={(event) => updateFilter('status', event.target.value)}
                         className="px-4 py-2 rounded-full border border-[#DAD4C5] bg-[#F4F1E9] text-sm text-[#1E1C18]"
                     >
-                        {statusTabs.map((tab) => (
-                            <option key={tab.value} value={tab.value}>
-                                {tab.label}
+                        {statusOptions.map((option) => (
+                            <option key={option.value} value={option.value}>
+                                {option.label}
+                            </option>
+                        ))}
+                    </select>
+                    <select
+                        value={filters.listing_type ?? ''}
+                        onChange={(event) => updateFilter('listing_type', event.target.value)}
+                        className="px-4 py-2 rounded-full border border-[#DAD4C5] bg-[#F4F1E9] text-sm text-[#1E1C18]"
+                    >
+                        {listingTypeOptions.map((option) => (
+                            <option key={option.value} value={option.value}>
+                                {option.label}
                             </option>
                         ))}
                     </select>
