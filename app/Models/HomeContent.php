@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class HomeContent extends Model
 {
@@ -11,6 +12,7 @@ class HomeContent extends Model
         'hero_headline',
         'hero_subtext',
         'hero_cta_label',
+        'hero_image',
         'stat_1_value',
         'stat_1_label',
         'stat_2_value',
@@ -33,5 +35,10 @@ class HomeContent extends Model
     public static function current(): self
     {
         return static::query()->firstOrCreate([]);
+    }
+
+    public function heroImageUrl(): ?string
+    {
+        return $this->hero_image ? Storage::disk('public')->url($this->hero_image) : null;
     }
 }

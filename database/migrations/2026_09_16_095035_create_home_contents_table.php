@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('hero_headline')->nullable();
             $table->text('hero_subtext')->nullable();
             $table->string('hero_cta_label')->nullable();
+            $table->string('hero_image')->nullable();
             $table->string('stat_1_value')->nullable();
             $table->string('stat_1_label')->nullable();
             $table->string('stat_2_value')->nullable();

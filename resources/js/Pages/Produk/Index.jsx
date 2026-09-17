@@ -38,37 +38,29 @@ export default function Index({ produks, filters, seo, jsonLd }) {
             </section>
 
             <section className="max-w-6xl mx-auto px-6 pb-6 border-t border-[#DAD4C5] pt-8">
-                <div className="flex flex-wrap items-center gap-2 mb-4">
-                    {tipeTabs.map((tab) => (
-                        <button
-                            key={tab.value}
-                            type="button"
-                            onClick={() => updateFilter('tipe', tab.value)}
-                            className={
-                                (filters.tipe ?? '') === tab.value
-                                    ? 'px-4 py-2 rounded-full bg-[#1E1C18] text-[#F4F1E9] text-sm'
-                                    : 'px-4 py-2 rounded-full text-[#6B6459] text-sm hover:bg-[#EAE5D8] transition-colors'
-                            }
-                        >
-                            {tab.label}
-                        </button>
-                    ))}
-                </div>
-                <div className="flex flex-wrap items-center gap-2">
-                    {statusTabs.map((tab) => (
-                        <button
-                            key={tab.value}
-                            type="button"
-                            onClick={() => updateFilter('status', tab.value)}
-                            className={
-                                (filters.status ?? '') === tab.value
-                                    ? 'px-4 py-1.5 rounded-full border border-[#DAD4C5] text-sm'
-                                    : 'px-4 py-1.5 rounded-full border border-transparent text-[#6B6459] text-sm hover:bg-[#EAE5D8] transition-colors'
-                            }
-                        >
-                            {tab.label}
-                        </button>
-                    ))}
+                <div className="flex flex-wrap items-center gap-3">
+                    <select
+                        value={filters.tipe ?? ''}
+                        onChange={(event) => updateFilter('tipe', event.target.value)}
+                        className="px-4 py-2 rounded-full border border-[#DAD4C5] bg-[#F4F1E9] text-sm text-[#1E1C18]"
+                    >
+                        {tipeTabs.map((tab) => (
+                            <option key={tab.value} value={tab.value}>
+                                {tab.label}
+                            </option>
+                        ))}
+                    </select>
+                    <select
+                        value={filters.status ?? ''}
+                        onChange={(event) => updateFilter('status', event.target.value)}
+                        className="px-4 py-2 rounded-full border border-[#DAD4C5] bg-[#F4F1E9] text-sm text-[#1E1C18]"
+                    >
+                        {statusTabs.map((tab) => (
+                            <option key={tab.value} value={tab.value}>
+                                {tab.label}
+                            </option>
+                        ))}
+                    </select>
                 </div>
             </section>
 

@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Models\HomeContent;
 use BackedEnum;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -40,6 +41,12 @@ class ManageHomeContent extends Page implements HasForms
             ->components([
                 Section::make('Hero')
                     ->schema([
+                        FileUpload::make('hero_image')
+                            ->label('Foto hero (section paling atas)')
+                            ->image()
+                            ->disk('public')
+                            ->directory('home')
+                            ->helperText('Kalau kosong, halaman Home menampilkan ilustrasi placeholder.'),
                         TextInput::make('hero_eyebrow')
                             ->label('Eyebrow (teks kecil di atas judul)')
                             ->required(),

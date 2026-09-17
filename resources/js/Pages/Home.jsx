@@ -21,7 +21,6 @@ const tipeTabs = [
 
 export default function Home({ content, highlights, artikelHighlights, seo, jsonLd }) {
     const { settings } = usePage().props;
-    const heroCover = highlights.find((produk) => produk.cover)?.cover;
     const [featuredArtikel, ...smallArtikels] = artikelHighlights;
 
     return (
@@ -43,8 +42,8 @@ export default function Home({ content, highlights, artikelHighlights, seo, json
                     </Link>
                 </div>
                 <div className="relative h-[420px] overflow-hidden" style={{ clipPath: 'polygon(0 7%, 100% 0, 100% 100%, 0 93%)' }}>
-                    {heroCover ? (
-                        <img src={heroCover} alt={settings.nama_agensi} className="w-full h-full object-cover" />
+                    {content.hero_image ? (
+                        <img src={content.hero_image} alt={settings.nama_agensi} className="w-full h-full object-cover" />
                     ) : (
                         <HeroKawasanArt className="w-full h-full" />
                     )}
