@@ -46,7 +46,8 @@ class HomeController extends Controller
             ->map(fn (PromoBanner $banner) => [
                 'judul' => $banner->judul,
                 'link_url' => $banner->link_url,
-                'gambar' => $banner->gambarUrl(),
+                'gambarDesktop' => $banner->gambarDesktopUrl(),
+                'gambarMobile' => $banner->gambarMobileUrl(),
             ]);
 
         $artikelHighlights = Artikel::query()

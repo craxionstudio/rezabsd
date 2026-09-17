@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Produks\Schemas;
 
+use App\Support\ImageUploadDefaults;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -76,13 +77,15 @@ class ProdukForm
                     ->schema([
                         RichEditor::make('deskripsi')
                             ->columnSpanFull(),
-                        SpatieMediaLibraryFileUpload::make('galeri')
-                            ->collection('galeri')
-                            ->image()
-                            ->multiple()
-                            ->reorderable()
-                            ->panelLayout('grid')
-                            ->columnSpanFull(),
+                        ImageUploadDefaults::apply(
+                            SpatieMediaLibraryFileUpload::make('galeri')
+                                ->collection('galeri')
+                                ->image()
+                                ->multiple()
+                                ->reorderable()
+                                ->panelLayout('grid')
+                                ->columnSpanFull()
+                        ),
                     ]),
                 Section::make('SEO')
                     ->schema([

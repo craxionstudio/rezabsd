@@ -4,6 +4,7 @@ namespace App\Filament\Resources\PromoBanners;
 
 use App\Filament\Resources\PromoBanners\Pages\ManagePromoBanners;
 use App\Models\PromoBanner;
+use App\Support\ImageUploadDefaults;
 use BackedEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -33,12 +34,24 @@ class PromoBannerResource extends Resource
     {
         return $schema
             ->components([
-                SpatieMediaLibraryFileUpload::make('gambar')
-                    ->collection('gambar')
-                    ->image()
-                    ->required()
-                    ->helperText('Rasio potrait 3:4 utk mobile, landscape 16:6 utk desktop — pakai foto yang aman di-crop ke dua rasio itu.')
-                    ->columnSpanFull(),
+                ImageUploadDefaults::apply(
+                    SpatieMediaLibraryFileUpload::make('gambar_desktop')
+                        ->label('Gambar Desktop (16:6)')
+                        ->collection('gambar_desktop')
+                        ->image()
+                        ->required()
+                        ->helperText('Landscape, rasio 16:6 — ditampilkan di layar desktop/tablet.')
+                        ->columnSpanFull()
+                ),
+                ImageUploadDefaults::apply(
+                    SpatieMediaLibraryFileUpload::make('gambar_mobile')
+                        ->label('Gambar Mobile (3:4)')
+                        ->collection('gambar_mobile')
+                        ->image()
+                        ->required()
+                        ->helperText('Potrait, rasio 3:4 — ditampilkan di layar HP.')
+                        ->columnSpanFull()
+                ),
                 TextInput::make('judul')
                     ->helperText('Dipakai sebagai teks alt gambar, tidak ditampilkan di halaman.'),
                 TextInput::make('link_url')
@@ -64,8 +77,8 @@ class PromoBannerResource extends Resource
             ->defaultSort('urutan')
             ->reorderable('urutan')
             ->columns([
-                SpatieMediaLibraryImageColumn::make('gambar')
-                    ->collection('gambar')
+                SpatieMediaLibraryImageColumn::make('gambar_desktop')
+                    ->collection('gambar_desktop')
                     ->label('Gambar'),
                 TextColumn::make('judul'),
                 TextColumn::make('status_tayang')

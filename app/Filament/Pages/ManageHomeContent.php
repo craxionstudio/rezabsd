@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Models\HomeContent;
+use App\Support\ImageUploadDefaults;
 use BackedEnum;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
@@ -41,12 +42,14 @@ class ManageHomeContent extends Page implements HasForms
             ->components([
                 Section::make('Hero')
                     ->schema([
-                        FileUpload::make('hero_image')
-                            ->label('Foto hero (section paling atas)')
-                            ->image()
-                            ->disk('public')
-                            ->directory('home')
-                            ->helperText('Kalau kosong, halaman Home menampilkan ilustrasi placeholder.'),
+                        ImageUploadDefaults::apply(
+                            FileUpload::make('hero_image')
+                                ->label('Foto hero (section paling atas)')
+                                ->image()
+                                ->disk('public')
+                                ->directory('home')
+                                ->helperText('Kalau kosong, halaman Home menampilkan ilustrasi placeholder. Maks. 2MB, foto besar otomatis di-resize.')
+                        ),
                         TextInput::make('hero_eyebrow')
                             ->label('Eyebrow (teks kecil di atas judul)')
                             ->required(),

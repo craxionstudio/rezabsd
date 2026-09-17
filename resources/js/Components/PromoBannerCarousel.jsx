@@ -18,8 +18,13 @@ export default function PromoBannerCarousel({ banners }) {
     }
 
     const image = (
-        <div className="relative aspect-[3/4] md:aspect-[16/6] w-full overflow-hidden bg-[#EAE5D8]">
-            <img src={banner.gambar} alt={banner.judul ?? ''} className="w-full h-full object-cover" />
+        <div className="relative w-full overflow-hidden bg-[#EAE5D8]">
+            <div className="aspect-[3/4] md:hidden">
+                <img src={banner.gambarMobile} alt={banner.judul ?? ''} className="w-full h-full object-cover" />
+            </div>
+            <div className="hidden md:block md:aspect-[16/6]">
+                <img src={banner.gambarDesktop} alt={banner.judul ?? ''} className="w-full h-full object-cover" />
+            </div>
         </div>
     );
 

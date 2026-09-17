@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Models\Setting;
+use App\Support\ImageUploadDefaults;
 use BackedEnum;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Textarea;
@@ -42,12 +43,14 @@ class ManageSettings extends Page implements HasForms
                 Section::make('Identitas Sales & Agensi')
                     ->columns(2)
                     ->schema([
-                        FileUpload::make('foto_profil')
-                            ->image()
-                            ->avatar()
-                            ->disk('public')
-                            ->directory('profil')
-                            ->columnSpanFull(),
+                        ImageUploadDefaults::apply(
+                            FileUpload::make('foto_profil')
+                                ->image()
+                                ->avatar()
+                                ->disk('public')
+                                ->directory('profil')
+                                ->columnSpanFull()
+                        ),
                         TextInput::make('nama_sales')->required(),
                         TextInput::make('jabatan')->required(),
                         TextInput::make('nama_agensi')->required(),

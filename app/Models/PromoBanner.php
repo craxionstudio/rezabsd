@@ -19,7 +19,8 @@ class PromoBanner extends Model implements HasMedia
 
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('gambar')->singleFile()->useDisk('public');
+        $this->addMediaCollection('gambar_desktop')->singleFile()->useDisk('public');
+        $this->addMediaCollection('gambar_mobile')->singleFile()->useDisk('public');
     }
 
     public function scopePublished($query)
@@ -27,8 +28,13 @@ class PromoBanner extends Model implements HasMedia
         return $query->where('status_tayang', 'published');
     }
 
-    public function gambarUrl(): ?string
+    public function gambarDesktopUrl(): ?string
     {
-        return $this->getFirstMediaUrl('gambar') ?: null;
+        return $this->getFirstMediaUrl('gambar_desktop') ?: null;
+    }
+
+    public function gambarMobileUrl(): ?string
+    {
+        return $this->getFirstMediaUrl('gambar_mobile') ?: null;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Artikels\Schemas;
 
+use App\Support\ImageUploadDefaults;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
@@ -39,10 +40,12 @@ class ArtikelForm
                             ->default('draft')
                             ->required(),
                         DateTimePicker::make('tanggal_publish'),
-                        SpatieMediaLibraryFileUpload::make('featured_image')
-                            ->collection('featured_image')
-                            ->image()
-                            ->columnSpanFull(),
+                        ImageUploadDefaults::apply(
+                            SpatieMediaLibraryFileUpload::make('featured_image')
+                                ->collection('featured_image')
+                                ->image()
+                                ->columnSpanFull()
+                        ),
                         RichEditor::make('konten')
                             ->required()
                             ->columnSpanFull(),
