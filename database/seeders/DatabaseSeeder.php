@@ -9,7 +9,7 @@ use App\Models\LegalContent;
 use App\Models\Produk;
 use App\Models\Setting;
 use App\Models\TipeProduk;
-use App\Models\TipeRumah;
+use App\Models\TipeUnit;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -74,18 +74,25 @@ class DatabaseSeeder extends Seeder
         foreach ([
             ['nama' => 'Rumah', 'slug' => 'rumah', 'urutan' => 1],
             ['nama' => 'Ruko', 'slug' => 'ruko', 'urutan' => 2],
-            ['nama' => 'Kavling', 'slug' => 'kavling', 'urutan' => 3],
-            ['nama' => 'Gudang', 'slug' => 'gudang', 'urutan' => 4],
+            ['nama' => 'Apartment', 'slug' => 'apartment', 'urutan' => 3],
+            ['nama' => 'Kavling', 'slug' => 'kavling', 'urutan' => 4],
+            ['nama' => 'Gudang', 'slug' => 'gudang', 'urutan' => 5],
         ] as $tipe) {
             TipeProduk::query()->firstOrCreate(['slug' => $tipe['slug']], $tipe);
         }
 
         Produk::factory(9)->create()->each(function (Produk $produk) {
-            $tanpaBangunan = in_array($produk->tipeProduk->slug, ['kavling', 'gudang']);
+            $tipeSlug = $produk->tipeProduk->slug;
+            $tanpaBangunan = in_array($tipeSlug, ['kavling', 'gudang']);
             $jumlahTipe = $tanpaBangunan ? 1 : fake()->numberBetween(1, 4);
 
             for ($urutan = 0; $urutan < $jumlahTipe; $urutan++) {
-                $factory = $tanpaBangunan ? TipeRumah::factory()->tanpaBangunan() : TipeRumah::factory();
+                $factory = match ($tipeSlug) {
+                    'ruko' => TipeUnit::factory()->ruko(),
+                    'apartment' => TipeUnit::factory()->apartment(),
+                    'kavling', 'gudang' => TipeUnit::factory()->tanpaBangunan(),
+                    default => TipeUnit::factory(),
+                };
                 $factory->create(['produk_id' => $produk->id, 'urutan' => $urutan]);
             }
         });

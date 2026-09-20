@@ -3,7 +3,7 @@ import SiteLayout from '../../Layouts/SiteLayout';
 import Seo from '../../Components/Seo';
 import ProdukListingCard from '../../Components/ProdukListingCard';
 import { produkArtFor } from '../../Components/PlaceholderArt';
-import { formatHargaSingkat, waLink } from '../../lib/format';
+import { waLink } from '../../lib/format';
 
 const STATUS_LABEL = { primary: 'Primary', secondary: 'Secondary' };
 const LISTING_TYPE_LABEL = { jual: 'Dijual', sewa: 'Disewakan' };
@@ -23,11 +23,11 @@ export default function Show({ produk, related, seo, jsonLd }) {
                 / <span className="text-[#1E1C18]">{produk.nama}</span>
             </div>
 
-            {produk.tipeRumahNames.length > 0 && (
+            {produk.tipeUnitNames.length > 0 && (
                 <section className="max-w-6xl mx-auto px-6 pb-8">
                     <p className="text-sm text-[#6E7C58] mb-3">Tersedia tipe</p>
                     <div className="flex flex-wrap gap-2">
-                        {produk.tipeRumahNames.map((nama) => (
+                        {produk.tipeUnitNames.map((nama) => (
                             <span key={nama} className="px-4 py-2 border border-[#DAD4C5] text-sm">
                                 {nama}
                             </span>
@@ -63,29 +63,28 @@ export default function Show({ produk, related, seo, jsonLd }) {
                         {STATUS_LABEL[produk.status]} · {produk.tipe} · {LISTING_TYPE_LABEL[produk.listing_type]}
                     </p>
                     <h1 className="font-display text-3xl md:text-4xl mb-3">{produk.nama}</h1>
-                    <p className="font-display text-2xl mb-8">{formatHargaSingkat(produk.harga)}</p>
+                    <p className="font-display text-2xl mb-6">{produk.hargaLabel}</p>
+
+                    {produk.promo.length > 0 && (
+                        <ul className="flex flex-wrap gap-2 mb-8">
+                            {produk.promo.map((item) => (
+                                <li
+                                    key={item}
+                                    className="px-3 py-1.5 bg-[#EAE5D8] text-[#1E1C18] text-xs rounded-full"
+                                >
+                                    {item}
+                                </li>
+                            ))}
+                        </ul>
+                    )}
 
                     <div className="divide-y divide-[#DAD4C5] text-sm mb-10">
-                        <div className="flex justify-between py-3">
-                            <span className="text-[#6B6459]">Luas tanah</span>
-                            <span>{produk.luas_tanah ?? '-'} m²</span>
-                        </div>
-                        <div className="flex justify-between py-3">
-                            <span className="text-[#6B6459]">Luas bangunan</span>
-                            <span>{produk.luas_bangunan ?? '-'} m²</span>
-                        </div>
-                        <div className="flex justify-between py-3">
-                            <span className="text-[#6B6459]">Kamar tidur</span>
-                            <span>{produk.kamar_tidur ?? '-'}</span>
-                        </div>
-                        <div className="flex justify-between py-3">
-                            <span className="text-[#6B6459]">Kamar mandi</span>
-                            <span>{produk.kamar_mandi ?? '-'}</span>
-                        </div>
-                        <div className="flex justify-between py-3">
-                            <span className="text-[#6B6459]">Status</span>
-                            <span>Siap huni</span>
-                        </div>
+                        {produk.specRows.map((row) => (
+                            <div key={row.label} className="flex justify-between py-3">
+                                <span className="text-[#6B6459]">{row.label}</span>
+                                <span>{row.value}</span>
+                            </div>
+                        ))}
                     </div>
 
                     {produk.deskripsi && (

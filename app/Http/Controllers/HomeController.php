@@ -20,12 +20,12 @@ class HomeController extends Controller
 
         $highlights = Produk::query()
             ->published()
-            ->with(['tipeProduk', 'tipeRumahs'])
+            ->with(['tipeProduk', 'tipeUnits'])
             ->latest()
             ->take(6)
             ->get()
             ->map(function (Produk $produk) {
-                $spesifikasi = $produk->representativeTipeRumah();
+                $spesifikasi = $produk->representativeTipeUnit();
 
                 return [
                     'nama' => $produk->nama,
@@ -34,7 +34,7 @@ class HomeController extends Controller
                     'tipeSlug' => $produk->tipeProduk->slug,
                     'status' => $produk->status,
                     'listing_type' => $produk->listing_type,
-                    'harga' => $produk->harga,
+                    'hargaLabel' => $produk->hargaLabel(),
                     'lokasi' => $produk->lokasi,
                     'luas_tanah' => $spesifikasi?->luas_tanah,
                     'kamar_tidur' => $spesifikasi?->kamar_tidur,

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Rupiah;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -22,7 +23,10 @@ class Produk extends Model implements HasMedia
         'tipe_produk_id',
         'status',
         'listing_type',
-        'harga',
+        'mode_harga',
+        'cicilan_mulai',
+        'harga_mulai',
+        'promo',
         'deskripsi',
         'lokasi',
         'meta_title',
@@ -33,7 +37,9 @@ class Produk extends Model implements HasMedia
     protected function casts(): array
     {
         return [
-            'harga' => 'integer',
+            'cicilan_mulai' => 'integer',
+            'harga_mulai' => 'integer',
+            'promo' => 'array',
         ];
     }
 
@@ -47,18 +53,18 @@ class Produk extends Model implements HasMedia
         return $this->belongsTo(TipeProduk::class);
     }
 
-    public function tipeRumahs(): HasMany
+    public function tipeUnits(): HasMany
     {
-        return $this->hasMany(TipeRumah::class)->orderBy('urutan');
+        return $this->hasMany(TipeUnit::class)->orderBy('urutan');
     }
 
     /**
-     * The TipeRumah whose specs (LT/LB/kamar) represent this Produk on
-     * listing cards and the detail page — the one with the lowest urutan.
+     * The TipeUnit whose specs represent this Produk on listing cards and
+     * the detail page — the one with the lowest urutan.
      */
-    public function representativeTipeRumah(): ?TipeRumah
+    public function representativeTipeUnit(): ?TipeUnit
     {
-        return $this->tipeRumahs->first();
+        return $this->tipeUnits->first();
     }
 
     public function scopePublished($query)
@@ -79,5 +85,27 @@ class Produk extends Model implements HasMedia
     public function galleryUrls(): array
     {
         return $this->getMedia('galeri')->map(fn (Media $media) => $media->getUrl())->all();
+    }
+
+    /**
+     * The raw rupiah value driving the "Mulai dari" price display, sourced
+     * from cicilan_mulai or harga_mulai depending on mode_harga.
+     */
+    public function hargaMulaiValue(): ?int
+    {
+        return $this->mode_harga === 'cicilan' ? $this->cicilan_mulai : $this->harga_mulai;
+    }
+
+    public function hargaLabel(): string
+    {
+        $value = $this->hargaMulaiValue();
+
+        if ($value === null) {
+            return '-';
+        }
+
+        $suffix = $this->mode_harga === 'cicilan' ? '/bulan' : '';
+
+        return 'Mulai dari '.Rupiah::singkat($value).$suffix;
     }
 }

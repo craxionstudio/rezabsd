@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Produks\Tables;
 
+use App\Models\Produk;
 use App\Models\TipeProduk;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -36,8 +37,10 @@ class ProduksTable
                     ->badge()
                     ->sortable(),
                 TextColumn::make('harga')
-                    ->money('IDR')
-                    ->sortable(),
+                    ->label('Harga')
+                    ->state(fn (Produk $record): string => $record->hargaLabel())
+                    ->sortable(query: fn ($query, string $direction) => $query
+                        ->orderByRaw('COALESCE(cicilan_mulai, harga_mulai) '.$direction)),
                 TextColumn::make('lokasi')
                     ->toggleable(),
                 TextColumn::make('status_tayang')

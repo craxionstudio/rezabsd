@@ -1,6 +1,5 @@
 import { Link } from '@inertiajs/react';
 import { produkArtFor } from './PlaceholderArt';
-import { formatHargaSingkat } from '../lib/format';
 
 const STATUS_LABEL = { primary: 'Primary', secondary: 'Secondary' };
 
@@ -10,12 +9,16 @@ export default function ProdukListingCard({ produk, index = 0, showTipeInLabel =
         ? `${STATUS_LABEL[produk.status]} · ${produk.tipe}`
         : STATUS_LABEL[produk.status];
 
-    let specs = formatHargaSingkat(produk.harga);
+    let specs = produk.hargaLabel;
     if (produk.listing_type === 'sewa') {
         specs += ' · Disewakan';
     }
     if (showSpecs) {
-        if (produk.kamar_tidur || produk.kamar_mandi) {
+        if (produk.tipeSlug === 'apartment' && produk.kamar_tidur !== null && produk.kamar_tidur !== undefined) {
+            specs += ` · ${produk.kamar_tidur === 0 ? 'Studio' : `${produk.kamar_tidur}BR`}`;
+        } else if (produk.tipeSlug === 'ruko' && produk.kamar_mandi) {
+            specs += ` · ${produk.kamar_mandi} toilet`;
+        } else if (produk.kamar_tidur || produk.kamar_mandi) {
             specs += ` · ${produk.kamar_tidur ?? '-'} KT, ${produk.kamar_mandi ?? '-'} KM`;
         } else if (produk.luas_tanah) {
             specs += ` · ${produk.luas_tanah} m²`;

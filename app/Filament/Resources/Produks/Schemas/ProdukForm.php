@@ -5,10 +5,12 @@ namespace App\Filament\Resources\Produks\Schemas;
 use App\Support\ImageUploadDefaults;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Schemas\Components\Utilities\Get;
 use Illuminate\Support\Str;
 
 class ProdukForm
@@ -19,7 +21,7 @@ class ProdukForm
             ->components([
                 Section::make('Informasi Produk')
                     ->columns(2)
-                    ->description('Spesifikasi LT/LB/kamar diisi per Tipe Rumah di tab bawah setelah produk ini disimpan.')
+                    ->description('Spesifikasi LT/LB/kamar diisi per Tipe Unit di tab bawah setelah produk ini disimpan.')
                     ->schema([
                         TextInput::make('nama')
                             ->required()
@@ -50,10 +52,33 @@ class ProdukForm
                             ])
                             ->default('jual')
                             ->required(),
-                        TextInput::make('harga')
-                            ->required()
+                        Select::make('mode_harga')
+                            ->label('Mode Harga')
+                            ->options([
+                                'cicilan' => 'Cicilan',
+                                'harga' => 'Harga jual',
+                            ])
+                            ->default('cicilan')
+                            ->live()
+                            ->required(),
+                        TextInput::make('cicilan_mulai')
+                            ->label('Cicilan mulai dari')
                             ->numeric()
-                            ->prefix('Rp'),
+                            ->prefix('Rp')
+                            ->suffix('/bulan')
+                            ->visible(fn (Get $get) => $get('mode_harga') === 'cicilan')
+                            ->required(fn (Get $get) => $get('mode_harga') === 'cicilan'),
+                        TextInput::make('harga_mulai')
+                            ->label('Harga mulai dari')
+                            ->numeric()
+                            ->prefix('Rp')
+                            ->visible(fn (Get $get) => $get('mode_harga') === 'harga')
+                            ->required(fn (Get $get) => $get('mode_harga') === 'harga'),
+                        TagsInput::make('promo')
+                            ->label('Promo')
+                            ->placeholder('DP 0%, Free biaya KPR & AJB, dll.')
+                            ->helperText('Tekan enter tiap selesai satu poin promo. Opsional.')
+                            ->columnSpanFull(),
                         TextInput::make('lokasi')
                             ->maxLength(255),
                         Select::make('status_tayang')

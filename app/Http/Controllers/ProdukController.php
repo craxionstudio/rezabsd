@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Produk;
 use App\Models\Setting;
 use App\Models\TipeProduk;
+use App\Support\TipeProdukSpesifikasi;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -19,14 +20,14 @@ class ProdukController extends Controller
 
         $produks = Produk::query()
             ->published()
-            ->with(['tipeProduk', 'tipeRumahs'])
+            ->with(['tipeProduk', 'tipeUnits'])
             ->when($tipeSlug, fn ($query) => $query->whereHas('tipeProduk', fn ($q) => $q->where('slug', $tipeSlug)))
             ->when($status, fn ($query) => $query->where('status', $status))
             ->when($listingType, fn ($query) => $query->where('listing_type', $listingType))
             ->latest()
             ->get()
             ->map(function (Produk $produk) {
-                $spesifikasi = $produk->representativeTipeRumah();
+                $spesifikasi = $produk->representativeTipeUnit();
 
                 return [
                     'nama' => $produk->nama,
@@ -35,7 +36,7 @@ class ProdukController extends Controller
                     'tipeSlug' => $produk->tipeProduk->slug,
                     'status' => $produk->status,
                     'listing_type' => $produk->listing_type,
-                    'harga' => $produk->harga,
+                    'hargaLabel' => $produk->hargaLabel(),
                     'lokasi' => $produk->lokasi,
                     'luas_tanah' => $spesifikasi?->luas_tanah,
                     'luas_bangunan' => $spesifikasi?->luas_bangunan,
@@ -73,12 +74,12 @@ class ProdukController extends Controller
     {
         abort_unless($produk->status_tayang === 'published', 404);
 
-        $produk->load(['tipeProduk', 'tipeRumahs']);
-        $spesifikasi = $produk->representativeTipeRumah();
+        $produk->load(['tipeProduk', 'tipeUnits']);
+        $spesifikasi = $produk->representativeTipeUnit();
 
         $related = Produk::query()
             ->published()
-            ->with(['tipeProduk', 'tipeRumahs'])
+            ->with(['tipeProduk', 'tipeUnits'])
             ->where('lokasi', $produk->lokasi)
             ->where('id', '!=', $produk->id)
             ->take(3)
@@ -89,7 +90,7 @@ class ProdukController extends Controller
                 'tipe' => $item->tipeProduk->nama,
                 'status' => $item->status,
                 'listing_type' => $item->listing_type,
-                'harga' => $item->harga,
+                'hargaLabel' => $item->hargaLabel(),
                 'lokasi' => $item->lokasi,
                 'cover' => $item->coverImageUrl(),
             ]);
@@ -101,15 +102,13 @@ class ProdukController extends Controller
                 'tipe' => $produk->tipeProduk->nama,
                 'status' => $produk->status,
                 'listing_type' => $produk->listing_type,
-                'harga' => $produk->harga,
+                'hargaLabel' => $produk->hargaLabel(),
                 'lokasi' => $produk->lokasi,
-                'luas_tanah' => $spesifikasi?->luas_tanah,
-                'luas_bangunan' => $spesifikasi?->luas_bangunan,
-                'kamar_tidur' => $spesifikasi?->kamar_tidur,
-                'kamar_mandi' => $spesifikasi?->kamar_mandi,
+                'promo' => $produk->promo ?? [],
+                'specRows' => TipeProdukSpesifikasi::rows($produk->tipeProduk->slug, $spesifikasi, $produk->status),
                 'deskripsi' => $produk->deskripsi,
                 'gallery' => $produk->galleryUrls(),
-                'tipeRumahNames' => $produk->tipeRumahs->pluck('nama_tipe')->all(),
+                'tipeUnitNames' => $produk->tipeUnits->pluck('nama_tipe')->all(),
             ],
             'related' => $related,
             'seo' => [
@@ -125,7 +124,7 @@ class ProdukController extends Controller
                 'offers' => [
                     '@type' => 'Offer',
                     'priceCurrency' => 'IDR',
-                    'price' => (string) $produk->harga,
+                    'price' => (string) ($produk->hargaMulaiValue() ?? 0),
                     'availability' => 'https://schema.org/InStock',
                     'seller' => [
                         '@type' => 'RealEstateAgent',

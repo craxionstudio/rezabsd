@@ -9,9 +9,9 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class TipeRumah extends Model implements HasMedia
+class TipeUnit extends Model implements HasMedia
 {
-    /** @use HasFactory<\Database\Factories\TipeRumahFactory> */
+    /** @use HasFactory<\Database\Factories\TipeUnitFactory> */
     use HasFactory;
     use InteractsWithMedia;
 
@@ -22,6 +22,8 @@ class TipeRumah extends Model implements HasMedia
         'luas_bangunan',
         'kamar_tidur',
         'kamar_mandi',
+        'carport',
+        'jumlah_lantai',
         'urutan',
     ];
 
@@ -32,6 +34,8 @@ class TipeRumah extends Model implements HasMedia
             'luas_bangunan' => 'integer',
             'kamar_tidur' => 'integer',
             'kamar_mandi' => 'integer',
+            'carport' => 'integer',
+            'jumlah_lantai' => 'integer',
             'urutan' => 'integer',
         ];
     }

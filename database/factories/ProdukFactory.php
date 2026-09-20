@@ -27,8 +27,11 @@ class ProdukFactory extends Factory
             'ruko' => "{$cluster} Commercial Park",
             'gudang' => "{$cluster} Logistics Hub",
             'kavling' => "{$cluster} Land Estate",
+            'apartment' => "{$cluster} Residence",
             default => "{$cluster} {$kawasan}",
         };
+
+        $modeHarga = $this->faker->randomElement(['cicilan', 'harga']);
 
         return [
             'nama' => $nama,
@@ -36,7 +39,13 @@ class ProdukFactory extends Factory
             'tipe_produk_id' => $tipe->id,
             'status' => $this->faker->randomElement(['primary', 'secondary']),
             'listing_type' => $this->faker->randomElement(['jual', 'jual', 'jual', 'sewa']),
-            'harga' => $this->faker->numberBetween(400, 2500) * 1_000_000,
+            'mode_harga' => $modeHarga,
+            'cicilan_mulai' => $modeHarga === 'cicilan' ? $this->faker->numberBetween(3, 15) * 1_000_000 : null,
+            'harga_mulai' => $modeHarga === 'harga' ? $this->faker->numberBetween(400, 2500) * 1_000_000 : null,
+            'promo' => $this->faker->optional(0.5)->randomElements(
+                ['DP 0%', 'Free biaya KPR & AJB', 'Cashback Rp 5 juta', 'Free AC & kitchen set'],
+                $this->faker->numberBetween(1, 2)
+            ),
             'deskripsi' => '<p>'.$this->faker->paragraphs(3, true).'</p>',
             'lokasi' => $this->faker->randomElement(['Kawasan Utara', 'Kawasan Selatan', 'Kawasan Tengah']),
             'status_tayang' => 'published',
