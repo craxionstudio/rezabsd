@@ -18,10 +18,11 @@ return new class extends Migration
             $table->foreignId('tipe_produk_id')->constrained('tipe_produks')->restrictOnDelete();
             $table->enum('status', ['primary', 'secondary']);
             $table->enum('listing_type', ['jual', 'sewa'])->default('jual');
-            $table->enum('mode_harga', ['cicilan', 'harga'])->default('cicilan');
-            $table->unsignedBigInteger('cicilan_mulai')->nullable();
-            $table->unsignedBigInteger('harga_mulai')->nullable();
-            $table->json('promo')->nullable();
+            $table->unsignedBigInteger('harga');
+            $table->unsignedInteger('luas_tanah')->nullable();
+            $table->unsignedInteger('luas_bangunan')->nullable();
+            $table->unsignedTinyInteger('kamar_tidur')->nullable();
+            $table->unsignedTinyInteger('kamar_mandi')->nullable();
             $table->text('deskripsi')->nullable();
             $table->string('lokasi')->nullable();
             $table->string('meta_title')->nullable();

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tipe_units', function (Blueprint $table) {
+        Schema::create('tipe_rumahs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('produk_id')->constrained('produks')->cascadeOnDelete();
             $table->string('nama_tipe');
@@ -19,8 +19,6 @@ return new class extends Migration
             $table->unsignedInteger('luas_bangunan')->nullable();
             $table->unsignedTinyInteger('kamar_tidur')->nullable();
             $table->unsignedTinyInteger('kamar_mandi')->nullable();
-            $table->unsignedTinyInteger('carport')->nullable();
-            $table->unsignedTinyInteger('jumlah_lantai')->nullable();
             $table->unsignedInteger('urutan')->default(0);
             $table->timestamps();
         });
@@ -31,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tipe_units');
+        Schema::dropIfExists('tipe_rumahs');
     }
 };
