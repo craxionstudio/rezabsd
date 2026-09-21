@@ -43,6 +43,8 @@ export default function Home({ content, highlights, tipeOptions, promoBanners, a
                 </div>
             </section>
 
+            <PromoBannerCarousel banners={promoBanners} headline="PROMO TERKINI" />
+
             <section className="max-w-6xl mx-auto px-6 py-16 border-t border-[#DAD4C5]">
                 <div className="flex flex-wrap items-end justify-between gap-4 mb-10">
                     <h2 className="font-display text-3xl">Listing pilihan</h2>
@@ -77,8 +79,6 @@ export default function Home({ content, highlights, tipeOptions, promoBanners, a
                     </div>
                 )}
             </section>
-
-            <PromoBannerCarousel banners={promoBanners} />
 
             <section className="bg-[#1E1C18] text-[#F4F1E9]">
                 <div className="max-w-6xl mx-auto px-6 py-20">

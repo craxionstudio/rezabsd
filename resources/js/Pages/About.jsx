@@ -1,21 +1,27 @@
-import { usePage } from '@inertiajs/react';
-import SiteLayout from '../Layouts/SiteLayout';
-import Seo from '../Components/Seo';
-import { PortraitArt } from '../Components/PlaceholderArt';
-import { renderWithEmphasis } from '../lib/text';
-import { waLink } from '../lib/format';
+import { usePage } from "@inertiajs/react";
+import SiteLayout from "../Layouts/SiteLayout";
+import Seo from "../Components/Seo";
+import { PortraitArt } from "../Components/PlaceholderArt";
+import { renderWithEmphasis } from "../lib/text";
+import { waLink } from "../lib/format";
 
 export default function About({ content, seo, jsonLd }) {
     const { settings } = usePage().props;
 
     return (
         <SiteLayout>
-            <Seo title={seo.title} description={seo.description} jsonLd={jsonLd} />
+            <Seo
+                title={seo.title}
+                description={seo.description}
+                jsonLd={jsonLd}
+            />
 
             <section className="max-w-6xl mx-auto px-6 pt-8 pb-16 grid md:grid-cols-[0.8fr_1.2fr] gap-12 items-center">
                 <div
                     className="relative aspect-square overflow-hidden"
-                    style={{ clipPath: 'polygon(0 5%, 100% 0, 100% 95%, 0 100%)' }}
+                    style={{
+                        clipPath: "polygon(0 5%, 100% 0, 100% 95%, 0 100%)",
+                    }}
                 >
                     {settings.foto_profil ? (
                         <img
@@ -28,11 +34,15 @@ export default function About({ content, seo, jsonLd }) {
                     )}
                 </div>
                 <div>
-                    <p className="text-sm text-[#6E7C58] mb-4">Sales properti {settings.nama_agensi}</p>
+                    <p className="text-sm text-[#6E7C58] mb-4">
+                        Sales properti {settings.nama_agensi}
+                    </p>
                     <h1 className="font-display text-4xl md:text-5xl leading-[1.1] mb-6">
                         {renderWithEmphasis(content.hero_headline)}
                     </h1>
-                    <p className="text-[#6B6459] text-lg max-w-lg leading-relaxed mb-6">{content.hero_subtext}</p>
+                    <p className="text-[#6B6459] text-lg max-w-lg leading-relaxed mb-6">
+                        {content.hero_subtext}
+                    </p>
                     <a
                         href={waLink(settings.whatsapp)}
                         target="_blank"
@@ -42,12 +52,6 @@ export default function About({ content, seo, jsonLd }) {
                         Chat via WhatsApp
                     </a>
                 </div>
-            </section>
-
-            <section className="max-w-3xl mx-auto px-6 py-16 border-t border-[#DAD4C5]">
-                <h2 className="font-display text-2xl mb-6">Latar belakang</h2>
-                <p className="text-[#6B6459] leading-relaxed mb-4">{content.bio_paragraph_1}</p>
-                <p className="text-[#6B6459] leading-relaxed">{content.bio_paragraph_2}</p>
             </section>
 
             <section className="border-t border-[#DAD4C5]">
@@ -63,10 +67,6 @@ export default function About({ content, seo, jsonLd }) {
                             <span>{content.credential_area}</span>
                         </div>
                         <div className="flex justify-between py-4">
-                            <span className="text-[#6B6459]">Pengalaman</span>
-                            <span>{content.credential_pengalaman}</span>
-                        </div>
-                        <div className="flex justify-between py-4">
                             <span className="text-[#6B6459]">Kontak</span>
                             <span>{content.credential_kontak}</span>
                         </div>
@@ -75,10 +75,16 @@ export default function About({ content, seo, jsonLd }) {
             </section>
 
             <section className="max-w-3xl mx-auto px-6 py-16 border-t border-[#DAD4C5]">
-                <h2 className="font-display text-2xl mb-6">Tentang {settings.nama_agensi}</h2>
-                <p className="text-[#6B6459] leading-relaxed mb-8">{content.linktown_description}</p>
+                <h2 className="font-display text-2xl mb-6">
+                    Tentang {settings.nama_agensi}
+                </h2>
+                <p className="text-[#6B6459] leading-relaxed mb-8">
+                    {content.linktown_description}
+                </p>
                 <div className="border-l-2 border-[#4C5740] pl-6 py-1">
-                    <p className="text-sm text-[#6B6459] leading-relaxed">{settings.disclaimer}</p>
+                    <p className="text-sm text-[#6B6459] leading-relaxed">
+                        {settings.disclaimer}
+                    </p>
                 </div>
             </section>
         </SiteLayout>
