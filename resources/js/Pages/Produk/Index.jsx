@@ -15,10 +15,20 @@ const listingTypeOptions = [
     { value: 'sewa', label: 'Sewa' },
 ];
 
-export default function Index({ produks, tipeOptions, filters, seo, jsonLd }) {
+export default function Index({ produks, tipeOptions, activeTipe, filters, seo, jsonLd }) {
+    const basePath = activeTipe ? `/produk/${activeTipe}` : '/produk';
+
+    function updateTipe(tipeSlug) {
+        router.get(tipeSlug ? `/produk/${tipeSlug}` : '/produk', filters, {
+            preserveState: true,
+            preserveScroll: true,
+            replace: true,
+        });
+    }
+
     function updateFilter(key, value) {
         router.get(
-            '/produk',
+            basePath,
             { ...filters, [key]: value || undefined },
             { preserveState: true, preserveScroll: true, replace: true }
         );
@@ -26,7 +36,7 @@ export default function Index({ produks, tipeOptions, filters, seo, jsonLd }) {
 
     return (
         <SiteLayout>
-            <Seo title={seo.title} description={seo.description} jsonLd={jsonLd} />
+            <Seo title={seo.title} description={seo.description} canonical={seo.canonical} jsonLd={jsonLd} />
 
             <section className="max-w-6xl mx-auto px-6 pt-8 pb-10">
                 <h1 className="font-display text-4xl md:text-5xl mb-4">Semua produk</h1>
@@ -39,8 +49,8 @@ export default function Index({ produks, tipeOptions, filters, seo, jsonLd }) {
             <section className="max-w-6xl mx-auto px-6 pb-6 border-t border-[#DAD4C5] pt-8">
                 <div className="flex flex-wrap items-center gap-3">
                     <select
-                        value={filters.tipe ?? ''}
-                        onChange={(event) => updateFilter('tipe', event.target.value)}
+                        value={activeTipe ?? ''}
+                        onChange={(event) => updateTipe(event.target.value)}
                         className="px-4 py-2 rounded-full border border-[#DAD4C5] bg-[#F4F1E9] text-sm text-[#1E1C18]"
                     >
                         <option value="">Semua tipe</option>

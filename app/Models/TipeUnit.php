@@ -45,6 +45,11 @@ class TipeUnit extends Model implements HasMedia
         $this->addMediaCollection('galeri')->useDisk('public');
     }
 
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')->width(600)->nonQueued();
+    }
+
     public function produk(): BelongsTo
     {
         return $this->belongsTo(Produk::class);

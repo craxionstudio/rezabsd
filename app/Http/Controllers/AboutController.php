@@ -22,8 +22,9 @@ class AboutController extends Controller
         return Inertia::render('About', [
             'content' => AboutContent::current(),
             'seo' => [
-                'title' => 'About Us',
+                'title' => 'Tentang',
                 'description' => "Kenali {$settings->nama_sales}, {$settings->jabatan} dari {$settings->nama_agensi}.",
+                'canonical' => url('/tentang'),
             ],
             'jsonLd' => [
                 '@context' => 'https://schema.org',

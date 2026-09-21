@@ -19,6 +19,7 @@ class Produk extends Model implements HasMedia
 
     protected $fillable = [
         'nama',
+        'nama_kawasan_induk',
         'slug',
         'tipe_produk_id',
         'status',
@@ -46,6 +47,11 @@ class Produk extends Model implements HasMedia
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('galeri')->useDisk('public');
+    }
+
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')->width(600)->nonQueued();
     }
 
     public function tipeProduk(): BelongsTo
@@ -80,6 +86,16 @@ class Produk extends Model implements HasMedia
     public function coverImageUrl(): ?string
     {
         return $this->getFirstMediaUrl('galeri') ?: null;
+    }
+
+    /**
+     * Smaller derivative for listing cards (Produk index, Home highlights,
+     * related listings) — falls back to the full image while the thumb
+     * conversion hasn't finished (e.g. right after upload).
+     */
+    public function coverThumbUrl(): ?string
+    {
+        return $this->getFirstMediaUrl('galeri', 'thumb') ?: $this->coverImageUrl();
     }
 
     public function galleryUrls(): array

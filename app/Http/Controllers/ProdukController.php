@@ -12,16 +12,34 @@ use Inertia\Response;
 
 class ProdukController extends Controller
 {
-    public function index(Request $request): Response
+    /**
+     * Single route handles both /produk/{tipeSlug} (path-segment type
+     * filter, one crawlable URL per type — see routes/web.php) and
+     * /produk/{slug} (detail). A TipeProduk slug match wins; otherwise the
+     * segment is looked up as a Produk slug.
+     */
+    public function showOrFilter(Request $request, string $tipeOrSlug): Response
     {
-        $tipeSlug = $request->string('tipe')->toString();
+        $tipe = TipeProduk::where('slug', $tipeOrSlug)->first();
+
+        if ($tipe) {
+            return $this->index($request, $tipe);
+        }
+
+        $produk = Produk::where('slug', $tipeOrSlug)->firstOrFail();
+
+        return $this->show($produk);
+    }
+
+    public function index(Request $request, ?TipeProduk $tipeFilter = null): Response
+    {
         $status = $request->string('status')->toString();
         $listingType = $request->string('listing_type')->toString();
 
         $produks = Produk::query()
             ->published()
             ->with(['tipeProduk', 'tipeUnits'])
-            ->when($tipeSlug, fn ($query) => $query->whereHas('tipeProduk', fn ($q) => $q->where('slug', $tipeSlug)))
+            ->when($tipeFilter, fn ($query) => $query->where('tipe_produk_id', $tipeFilter->id))
             ->when($status, fn ($query) => $query->where('status', $status))
             ->when($listingType, fn ($query) => $query->where('listing_type', $listingType))
             ->latest()
@@ -42,17 +60,21 @@ class ProdukController extends Controller
                     'luas_bangunan' => $spesifikasi?->luas_bangunan,
                     'kamar_tidur' => $spesifikasi?->kamar_tidur,
                     'kamar_mandi' => $spesifikasi?->kamar_mandi,
-                    'cover' => $produk->coverImageUrl(),
+                    'cover' => $produk->coverThumbUrl(),
                 ];
             });
 
         return Inertia::render('Produk/Index', [
             'produks' => $produks,
             'tipeOptions' => TipeProduk::query()->orderBy('urutan')->get(['nama', 'slug']),
-            'filters' => $request->only(['tipe', 'status', 'listing_type']),
+            'activeTipe' => $tipeFilter?->slug,
+            'filters' => $request->only(['status', 'listing_type']),
             'seo' => [
-                'title' => 'Produk',
-                'description' => 'Daftar listing rumah, ruko, dan kavling yang tersedia.',
+                'title' => $tipeFilter ? "Produk {$tipeFilter->nama}" : 'Produk',
+                'description' => $tipeFilter
+                    ? "Daftar listing {$tipeFilter->nama} yang tersedia di kawasan ini."
+                    : 'Daftar listing rumah, ruko, dan kavling yang tersedia.',
+                'canonical' => url($tipeFilter ? "/produk/{$tipeFilter->slug}" : '/produk'),
             ],
             'jsonLd' => [
                 '@context' => 'https://schema.org',
@@ -70,7 +92,7 @@ class ProdukController extends Controller
         ]);
     }
 
-    public function show(Produk $produk): Response
+    private function show(Produk $produk): Response
     {
         abort_unless($produk->status_tayang === 'published', 404);
 
@@ -92,12 +114,13 @@ class ProdukController extends Controller
                 'listing_type' => $item->listing_type,
                 'hargaLabel' => $item->hargaLabel(),
                 'lokasi' => $item->lokasi,
-                'cover' => $item->coverImageUrl(),
+                'cover' => $item->coverThumbUrl(),
             ]);
 
         return Inertia::render('Produk/Show', [
             'produk' => [
                 'nama' => $produk->nama,
+                'nama_kawasan_induk' => $produk->nama_kawasan_induk,
                 'slug' => $produk->slug,
                 'tipe' => $produk->tipeProduk->nama,
                 'status' => $produk->status,
@@ -114,13 +137,19 @@ class ProdukController extends Controller
             'seo' => [
                 'title' => $produk->meta_title ?: $produk->nama,
                 'description' => $produk->meta_description ?: str($produk->deskripsi ?? '')->stripTags()->limit(160)->toString(),
+                'canonical' => url("/produk/{$produk->slug}"),
             ],
-            'jsonLd' => [
+            'jsonLd' => array_filter([
                 '@context' => 'https://schema.org',
                 '@type' => 'Product',
                 'name' => $produk->nama,
                 'image' => $produk->galleryUrls(),
                 'description' => str($produk->deskripsi ?? '')->stripTags()->toString(),
+                'additionalProperty' => $produk->nama_kawasan_induk ? [
+                    '@type' => 'PropertyValue',
+                    'name' => 'Kawasan',
+                    'value' => $produk->nama_kawasan_induk,
+                ] : null,
                 'offers' => [
                     '@type' => 'Offer',
                     'priceCurrency' => 'IDR',
@@ -131,7 +160,7 @@ class ProdukController extends Controller
                         'name' => Setting::current()->nama_agensi,
                     ],
                 ],
-            ],
+            ]),
         ]);
     }
 }

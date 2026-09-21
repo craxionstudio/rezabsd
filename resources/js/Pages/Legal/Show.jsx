@@ -4,7 +4,7 @@ import Seo from '../../Components/Seo';
 export default function Show({ title, content, seo }) {
     return (
         <SiteLayout>
-            <Seo title={seo.title} description={seo.description} />
+            <Seo title={seo.title} description={seo.description} canonical={seo.canonical} />
 
             <article className="max-w-3xl mx-auto px-6 py-16">
                 <h1 className="font-display text-3xl md:text-4xl mb-8">{title}</h1>

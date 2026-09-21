@@ -18,7 +18,7 @@ export default function Home({ content, highlights, tipeOptions, promoBanners, a
 
     return (
         <SiteLayout>
-            <Seo title={seo.title} description={seo.description} jsonLd={jsonLd} />
+            <Seo title={seo.title} description={seo.description} canonical={seo.canonical} jsonLd={jsonLd} />
 
             <section className="max-w-6xl mx-auto px-6 pt-8 pb-16 grid md:grid-cols-2 gap-12 items-center">
                 <div>
@@ -55,7 +55,7 @@ export default function Home({ content, highlights, tipeOptions, promoBanners, a
                         {tipeOptions.map((tipe) => (
                             <Link
                                 key={tipe.slug}
-                                href={`/produk?tipe=${tipe.slug}`}
+                                href={`/produk/${tipe.slug}`}
                                 className="px-4 py-2 rounded-full text-[#6B6459] hover:bg-[#EAE5D8] transition-colors"
                             >
                                 {tipe.nama}

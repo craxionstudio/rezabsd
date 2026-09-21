@@ -13,6 +13,7 @@ export default function About({ content, seo, jsonLd }) {
             <Seo
                 title={seo.title}
                 description={seo.description}
+                canonical={seo.canonical}
                 jsonLd={jsonLd}
             />
 

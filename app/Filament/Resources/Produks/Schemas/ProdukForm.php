@@ -28,10 +28,18 @@ class ProdukForm
                             ->live(onBlur: true)
                             ->maxLength(255)
                             ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::slug($state))),
+                        TextInput::make('nama_kawasan_induk')
+                            ->label('Nama Kawasan Induk')
+                            ->helperText('Opsional — misal "Vireya" kalau produk ini secara marketing berada di bawah nama kawasan tertentu. Kosongkan kalau produk langsung di bawah nama besar kawasan.')
+                            ->maxLength(255),
                         TextInput::make('slug')
                             ->required()
                             ->unique(ignoreRecord: true)
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->rules(['not_in:rumah,ruko,apartment,kavling'])
+                            ->validationMessages([
+                                'not_in' => 'Slug tidak boleh sama dengan kata kunci tipe (rumah/ruko/apartment/kavling) — itu dipakai untuk URL filter tipe produk.',
+                            ]),
                         Select::make('tipe_produk_id')
                             ->label('Tipe Properti')
                             ->relationship('tipeProduk', 'nama')

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\AboutContent;
 use App\Models\Artikel;
 use App\Models\HomeContent;
+use App\Models\KategoriArtikel;
 use App\Models\LegalContent;
 use App\Models\Produk;
 use App\Models\Setting;
@@ -97,6 +98,15 @@ class DatabaseSeeder extends Seeder
             }
         });
 
-        Artikel::factory(6)->create();
+        foreach ([
+            ['nama' => 'Tips Beli Rumah', 'slug' => 'tips-beli-rumah', 'urutan' => 1],
+            ['nama' => 'Info Kawasan', 'slug' => 'info-kawasan', 'urutan' => 2],
+            ['nama' => 'Simulasi KPR', 'slug' => 'simulasi-kpr', 'urutan' => 3],
+            ['nama' => 'Legal & Perizinan', 'slug' => 'legal-perizinan', 'urutan' => 4],
+        ] as $kategori) {
+            KategoriArtikel::query()->firstOrCreate(['slug' => $kategori['slug']], $kategori);
+        }
+
+        Artikel::factory(9)->create();
     }
 }

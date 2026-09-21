@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Artikel;
+use App\Models\KategoriArtikel;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -24,7 +25,7 @@ class ArtikelFactory extends Factory
             'judul' => $judul,
             'slug' => Str::slug($judul).'-'.$this->faker->unique()->numberBetween(1000, 9999),
             'konten' => '<p>'.$this->faker->paragraphs(5, true).'</p>',
-            'kategori' => $this->faker->randomElement(['Tips Beli Rumah', 'Info Kawasan', 'KPR & Pembiayaan']),
+            'kategori_id' => KategoriArtikel::query()->inRandomOrder()->value('id') ?? KategoriArtikel::factory(),
             'tanggal_publish' => $this->faker->dateTimeBetween('-3 months', 'now'),
             'status_tayang' => 'published',
         ];

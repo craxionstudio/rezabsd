@@ -30,8 +30,12 @@ class ArtikelForm
                             ->required()
                             ->unique(ignoreRecord: true)
                             ->maxLength(255),
-                        TextInput::make('kategori')
-                            ->maxLength(255),
+                        Select::make('kategori_id')
+                            ->label('Kategori')
+                            ->relationship('kategori', 'nama')
+                            ->searchable()
+                            ->preload()
+                            ->required(),
                         Select::make('status_tayang')
                             ->options([
                                 'draft' => 'Draft',

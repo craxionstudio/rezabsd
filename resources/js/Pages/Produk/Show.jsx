@@ -14,7 +14,7 @@ export default function Show({ produk, related, seo, jsonLd }) {
 
     return (
         <SiteLayout>
-            <Seo title={seo.title} description={seo.description} jsonLd={jsonLd} />
+            <Seo title={seo.title} description={seo.description} canonical={seo.canonical} jsonLd={jsonLd} />
 
             <div className="max-w-6xl mx-auto px-6 pt-4 pb-6 text-sm text-[#6B6459]">
                 <Link href="/produk" className="hover:text-[#1E1C18] transition-colors">
@@ -63,6 +63,11 @@ export default function Show({ produk, related, seo, jsonLd }) {
                         {STATUS_LABEL[produk.status]} · {produk.tipe} · {LISTING_TYPE_LABEL[produk.listing_type]}
                     </p>
                     <h1 className="font-display text-3xl md:text-4xl mb-3">{produk.nama}</h1>
+                    {produk.nama_kawasan_induk && (
+                        <p className="text-sm text-[#8A8471] -mt-2 mb-3">
+                            Bagian dari kawasan {produk.nama_kawasan_induk}
+                        </p>
+                    )}
                     <p className="font-display text-2xl mb-6">{produk.hargaLabel}</p>
 
                     {produk.promo.length > 0 && (

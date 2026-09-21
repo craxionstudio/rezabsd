@@ -39,7 +39,7 @@ class HomeController extends Controller
                     'luas_tanah' => $spesifikasi?->luas_tanah,
                     'kamar_tidur' => $spesifikasi?->kamar_tidur,
                     'kamar_mandi' => $spesifikasi?->kamar_mandi,
-                    'cover' => $produk->coverImageUrl(),
+                    'cover' => $produk->coverThumbUrl(),
                 ];
             });
 
@@ -63,7 +63,7 @@ class HomeController extends Controller
                 'judul' => $artikel->judul,
                 'slug' => $artikel->slug,
                 'excerpt' => str($artikel->konten)->stripTags()->limit(110)->toString(),
-                'featured_image' => $artikel->featuredImageUrl(),
+                'featured_image' => $artikel->featuredImageThumbUrl(),
             ]);
 
         return Inertia::render('Home', [
@@ -92,6 +92,7 @@ class HomeController extends Controller
             'seo' => [
                 'title' => 'Home',
                 'description' => "Cari rumah, ruko, dan kavling bersama {$settings->nama_sales}, {$settings->jabatan} dari {$settings->nama_agensi}.",
+                'canonical' => url('/'),
             ],
             'jsonLd' => [
                 [

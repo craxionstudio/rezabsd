@@ -16,6 +16,7 @@ class LegalController extends Controller
             'seo' => [
                 'title' => 'Kebijakan Privasi',
                 'description' => 'Kebijakan privasi penggunaan website ini.',
+                'canonical' => url('/kebijakan-privasi'),
             ],
         ]);
     }
@@ -28,6 +29,7 @@ class LegalController extends Controller
             'seo' => [
                 'title' => 'Syarat & Ketentuan',
                 'description' => 'Syarat dan ketentuan penggunaan website ini.',
+                'canonical' => url('/syarat-ketentuan'),
             ],
         ]);
     }

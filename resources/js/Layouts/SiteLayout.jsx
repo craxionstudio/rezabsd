@@ -3,7 +3,7 @@ import { waLink, displayPhone } from '../lib/format';
 
 const navItems = [
     { href: '/', label: 'Beranda' },
-    { href: '/about-us', label: 'Tentang' },
+    { href: '/tentang', label: 'Tentang' },
     { href: '/produk', label: 'Produk' },
     { href: '/artikel', label: 'Artikel' },
 ];
