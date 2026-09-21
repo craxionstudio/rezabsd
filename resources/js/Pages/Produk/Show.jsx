@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { Link, usePage } from '@inertiajs/react';
 import SiteLayout from '../../Layouts/SiteLayout';
 import Seo from '../../Components/Seo';
 import ProdukListingCard from '../../Components/ProdukListingCard';
+import Lightbox from '../../Components/Lightbox';
 import { produkArtFor } from '../../Components/PlaceholderArt';
 import { waLink } from '../../lib/format';
 
@@ -11,6 +13,7 @@ const GALLERY_FALLBACK_COUNT = 5;
 
 export default function Show({ produk, related, seo, jsonLd }) {
     const { settings } = usePage().props;
+    const [lightboxIndex, setLightboxIndex] = useState(null);
 
     return (
         <SiteLayout>
@@ -47,7 +50,12 @@ export default function Show({ produk, related, seo, jsonLd }) {
                         return (
                             <div key={index} className="aspect-[3/4] h-full flex-shrink-0 overflow-hidden">
                                 {url ? (
-                                    <img src={url} alt={produk.nama} className="w-full h-full object-cover" />
+                                    <img
+                                        src={url}
+                                        alt={produk.nama}
+                                        className="w-full h-full object-cover cursor-pointer"
+                                        onClick={() => setLightboxIndex(index)}
+                                    />
                                 ) : (
                                     <Art className="w-full h-full" />
                                 )}
@@ -134,6 +142,13 @@ export default function Show({ produk, related, seo, jsonLd }) {
                     </div>
                 </section>
             )}
+
+            <Lightbox
+                images={produk.gallery}
+                activeIndex={lightboxIndex}
+                onClose={() => setLightboxIndex(null)}
+                onNavigate={setLightboxIndex}
+            />
         </SiteLayout>
     );
 }
